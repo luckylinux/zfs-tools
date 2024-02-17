@@ -1,0 +1,54 @@
+#!/bin/bash
+
+# Tool path
+toolpath="$( cd "$( dirname "${BASH_SOURCE[0]}" )" > /dev/null && pwd )"
+
+# Load files in config-pre/ folder
+source $toolpath/config-pre/*.sh
+
+# Pool Name
+pool="zdata"
+
+# Partition Number
+lukspartnumber=1
+
+# Disks to be used
+disks=()
+disks+=("ata-WDC_WDXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX1")
+disks+=("ata-WDC_WDXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX2")
+disks+=("ata-WDC_WDXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX3")
+disks+=("ata-WDC_WDXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX4")
+disks+=("ata-WDC_WDXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX5")
+disks+=("ata-WDC_WDXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX6")
+
+# Device names
+devices=()
+devices+=("/dev/disk/by-id/${disks[0]}")
+devices+=("/dev/disk/by-id/${disks[1]}")
+devices+=("/dev/disk/by-id/${disks[2]}")
+devices+=("/dev/disk/by-id/${disks[3]}")
+devices+=("/dev/disk/by-id/${disks[4]}")
+devices+=("/dev/disk/by-id/${disks[5]}")
+
+# LUKS device mappers
+luksdevices=()
+luksdevices+=("${disks[0]}_crypt")
+luksdevices+=("${disks[1]}_crypt")
+luksdevices+=("${disks[2]}_crypt")
+luksdevices+=("${disks[3]}_crypt")
+luksdevices+=("${disks[4]}_crypt")
+luksdevices+=("${disks[5]}_crypt")
+
+# Partition sizes
+disk_size=3815448                     			# MiB 4TB
+partition_start=4					# MiB (2 MiB are usually required for LUKS header, leave some room for safety margin)
+partition_end=$(($disk_size-$partition_start-256))	# MiB (leave some margin for possible bad blocks / slighly different sizes between the disks / ...)
+
+# Backup folders
+backupfolder="/backup"
+
+# In order to automatically setup NFS mountpoints
+mountpoints=()
+mountpoints+=("folder1")
+mountpoints+=("folder2")
+mountpoints+=("folder3")
