@@ -52,3 +52,7 @@ mountpoints=()
 mountpoints+=("folder1")
 mountpoints+=("folder2")
 mountpoints+=("folder3")
+
+# CLEVIS/TANG Automated LUKS unlocking
+keyservers=("192.168.1.15" "192.168.1.16" "192.168.1.17" "192.168.1.18")
+
