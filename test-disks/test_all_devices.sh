@@ -26,7 +26,7 @@ do
      tmux select-window -t testDevices:${counter}
 
      # Execute Command
-     tmux send-keys -t testDevices:${counter} "${toolpath}/test-disks/test_single_device.sh \"aaaaaa\"" ENTER
+     tmux send-keys -t testDevices:${counter} "${toolpath}/test-disks/test_single_device.sh \"${device}\"" ENTER
 
      # Increase counter
      counter=$(($counter+1))
