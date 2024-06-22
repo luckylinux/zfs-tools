@@ -8,7 +8,7 @@ if [[ ! -v toolpath ]]; then scriptpath=$(cd "$( dirname "${BASH_SOURCE[0]}" )" 
 source ${toolpath}/config.sh
 
 # Create folder
-mkdir -p "${toolpath}/smart"
+mkdir -p "${toolpath}/results/smart"
 
 # For each device
 for device in "${disks[@]}"

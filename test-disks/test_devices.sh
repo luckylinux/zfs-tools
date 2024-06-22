@@ -10,7 +10,36 @@ source ${toolpath}/config.sh
 # Create folder
 mkdir -p "${toolpath}/results/badblocks"
 
-# For each device
+# Generate Timestamp
+timestamp=$(date +"%Y%m%d_%Hh%Mm%Ss")
+
+# Run SMART Test
+for device in "${disks[@]}"
+do
+        # Stop if there is a test already running
+        smartctl -X /dev/disk/by-id/$device
+
+        # Wait for operation to terminate
+        sleep 5
+
+        # Run self-test
+        smartctl --test=long /dev/disk/by-id/$device
+done
+
+# Wait 2h for the Test to complete
+sleep 7200
+
+# Analyse SMART Results
+for device in "${disks[@]}"
+do
+        # Show all test results
+        smartctl --attributes --log=selftest /dev/disk/by-id/${device} > ${toolpath}/results/smart/${device}_${timestamp}_all.log
+
+        # Show found errors
+        smartctl --attributes --log=selftest --quietmode=errorsonly /dev/disk/by-id/${device} > ${toolpath}/results/smart/${device}_${timestamp}_errors.log
+done
+
+# Run Badblocks
 for device in "${disks[@]}"
 do
 	# Display device informations
@@ -43,5 +72,33 @@ do
 	#badblocks -wv /dev/disk/by-id/$device -o "badblocks/${device}.log" & # Without progress bar
 	#badblocks -b 4096 -wv /dev/disk/by-id/$device > "badblocks/${device}.log" & # Without progress bar
 	#badblocks -b 512 -c 65536 -wv /dev/disk/by-id/$device > "badblocks/${device}.log" & # Without progress bar
-	badblocks -b 4096 -c 65536 -wv -s /dev/disk/by-id/$device > "badblocks/${device}.log" & # Without progress bar
+
+        # Do not use a progress bar
+	badblocks -b 4096 -c 65536 -wv -s /dev/disk/by-id/$device > "${toolpath}/results/badblocks/${device}_${timestamp}.log" &
+done
+
+# Run another SMART Test
+for device in "${disks[@]}"
+do
+        # Stop if there is a test already running
+        smartctl -X /dev/disk/by-id/$device
+
+        # Wait for operation to terminate
+        sleep 5
+
+        # Run self-test
+        smartctl --test=long /dev/disk/by-id/$device
+done
+
+# Wait 2h for the Test to complete
+sleep 7200
+
+# Analyse SMART Results
+for device in "${disks[@]}"
+do
+        # Show all test results
+        smartctl --attributes --log=selftest /dev/disk/by-id/${device} > ${toolpath}/results/smart/${device}_${timestamp}_all.log
+
+        # Show found errors
+        smartctl --attributes --log=selftest --quietmode=errorsonly /dev/disk/by-id/${device} > ${toolpath}/results/smart/${device}_${timestamp}_errors.log
 done
