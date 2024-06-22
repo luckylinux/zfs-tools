@@ -1,13 +1,11 @@
 #!/bin/bash
 
-# If toolpath not set, set it to current working directory
-if [[ ! -v toolpath ]]
-then
-    toolpath=$(pwd)
-fi
+# Determine toolpath if not set already
+relativepath="./" # Define relative path to go from this script to the root level of the tool
+if [[ ! -v toolpath ]]; then scriptpath=$(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd ); toolpath=$(realpath --canonicalize-missing $scriptpath/$relativepath); fi
 
 # Load configuration
-source $toolpath/config.sh
+source ${toolpath}/config.sh
 
 # Update APT Lists
 apt-get update
@@ -23,25 +21,25 @@ keyservercounter=1
 for keyserver in "${keyservers[@]}"
 do
      # Get TANG Server Key
-     curl -sfg http://$keyserver/adv -o /tmp/keyserver-$keyservercounter.jws
+     curl -sfg http://${keyserver}/adv -o /tmp/keyserver-${keyservercounter}.jws
 
      # For each disk device
      for device in "${devices[@]}"
 
 	# Check which keys are currently used via CLEVIS
-     	list_device_keys=$(clevis luks list -d $device-part1)
+     	list_device_keys=$(clevis luks list -d ${device}-part1)
 
      	# Bind device to the TANG server via CLEVIS
 	if [[ "${list_device_keys}" == *"${keyserver}"* ]]; then
-        	echo "Keyserver <$keyserver> is already installed onto <$device> LUKS Header"
+        	echo "Keyserver <${keyserver}> is already installed onto <${device}> LUKS Header"
      	else
-        	echo "Install Keyserver <$keyserver> onto <$device> LUKS Header"
-        	echo $password | clevis luks bind -d $device-part1 tang "{\"url\": \"http://$keyserver\" , \"adv\": \"/tmp/keyserver-$keyservercounter.jws\" }"
+        	echo "Install Keyserver <${keyserver}> onto <${device}> LUKS Header"
+        	echo ${password} | clevis luks bind -d ${device}-part1 tang "{\"url\": \"http://${keyserver}\" , \"adv\": \"/tmp/keyserver-${keyservercounter}.jws\" }"
      	fi
 
 	# Get information about LUKS and Clevis Keyslots
-	cryptsetup luksDump $device-part1
-	clevis luks list -d $device-part1
+	cryptsetup luksDump ${device}-part1
+	clevis luks list -d ${device}-part1
      done
 
      # Increment counter

@@ -1,2 +1,7 @@
 # Do NOT upload user-defined configuration
 config.sh
+
+# Do NOT upload results
+results/**
+results/*
+results
