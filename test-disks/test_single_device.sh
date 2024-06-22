@@ -31,8 +31,8 @@ smartctl --test=long /dev/disk/by-id/$device
 # Generate Timestamp
 timestamp=$(date +"%Y%m%d_%Hh%Mm%Ss")
 
-# Wait 2h for the Test to complete
-sleep 7200
+# Wait 12h for the Test to complete
+sleep 43200
 
 # Analyse SMART Results
 # Show all test results
@@ -89,8 +89,8 @@ smartctl --test=long /dev/disk/by-id/$device
 # Generate Timestamp
 timestamp=$(date +"%Y%m%d_%Hh%Mm%Ss")
 
-# Wait 2h for the Test to complete
-sleep 7200
+# Wait 12h for the Test to complete
+sleep 43200
 
 # Analyse SMART Results
 # Show all test results
