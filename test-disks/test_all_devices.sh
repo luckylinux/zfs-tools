@@ -11,7 +11,7 @@ source ${toolpath}/config.sh
 mkdir -p "${toolpath}/results/badblocks"
 
 # Init TMUX Session
-tmux new-session -d -s "testDevices" -n "General" "ls -l"
+tmux new-session -d -s "testDevices" -n "General"
 
 # Initialize Counter
 counter=1
@@ -22,8 +22,11 @@ do
      # Create new TMUX Window
      tmux new-window -t testDevices:${counter} -n ${device}
 
-     # Launch Script
-     tmux select-window -t testDevices:${counter} "${toolpath}/test-disk/test_single_device.sh \"aaaaaa\""
+     # Select Window
+     tmux select-window -t testDevices:${counter}
+
+     # Execute Command
+     tmux send-keys -t testDevices:${counter} "${toolpath}/test-disk/test_single_device.sh \"aaaaaa\""
 
      # Increase counter
      counter=$(($counter+1))
