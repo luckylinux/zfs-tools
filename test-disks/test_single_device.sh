@@ -74,7 +74,7 @@ smartctl -X /dev/disk/by-id/$device
 #badblocks -b 512 -c 65536 -wv /dev/disk/by-id/$device > "badblocks/${device}.log" & # Without progress bar
 
 # Do not use a progress bar
-badblocks -b 4096 -c 65536 -wv -s /dev/disk/by-id/$device > "${toolpath}/results/badblocks/${device}_${timestamp}.log" &
+badblocks -t random -b 4096 -c 65536 -wv -s /dev/disk/by-id/$device > "${toolpath}/results/badblocks/${device}_${timestamp}.log" &
 
 # Run another SMART Test
 # Stop if there is a test already running
