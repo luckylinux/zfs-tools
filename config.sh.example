@@ -36,7 +36,7 @@ done
 
 # Partition sizes
 disk_size=3815448                     			# MiB 4TB
-partition_start=4					# MiB (2 MiB are usually required for LUKS header, leave some room for safety margin)
+partition_start=16					# MiB (2 MiB are usually required for LUKS header, leave some room for safety margin)
 partition_end=$(($disk_size-$partition_start-512))	# MiB (leave some margin for possible bad blocks / slighly different sizes between the disks / ...)
 
 # Backup folders
