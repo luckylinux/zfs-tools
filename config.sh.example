@@ -24,21 +24,15 @@ disks+=("ata-WDC_WDXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX6")
 
 # Device names
 devices=()
-devices+=("/dev/disk/by-id/${disks[0]}")
-devices+=("/dev/disk/by-id/${disks[1]}")
-devices+=("/dev/disk/by-id/${disks[2]}")
-devices+=("/dev/disk/by-id/${disks[3]}")
-devices+=("/dev/disk/by-id/${disks[4]}")
-devices+=("/dev/disk/by-id/${disks[5]}")
-
-# LUKS device mappers
 luksdevices=()
-luksdevices+=("${disks[0]}_crypt")
-luksdevices+=("${disks[1]}_crypt")
-luksdevices+=("${disks[2]}_crypt")
-luksdevices+=("${disks[3]}_crypt")
-luksdevices+=("${disks[4]}_crypt")
-luksdevices+=("${disks[5]}_crypt")
+for disk in "${disks[@]}"
+do
+   # Device Path
+   devices+=("/dev/disk/by-id/${disk}")
+
+   # LUKS Device Name
+   luksdevices+=("${disk}_crypt")
+done
 
 # Partition sizes
 disk_size=3815448                     			# MiB 4TB
