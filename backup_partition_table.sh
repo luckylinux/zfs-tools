@@ -5,7 +5,7 @@ relativepath="./" # Define relative path to go from this script to the root leve
 if [[ ! -v toolpath ]]; then scriptpath=$(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd ); toolpath=$(realpath --canonicalize-missing $scriptpath/$relativepath); fi
 
 # Load config
-source ${toolpath}/config.sh
+source ${toolpath}/load.sh
 
 # Generate date timestamp
 timestamp=$(date +%Y%m%d-%H-%M)
