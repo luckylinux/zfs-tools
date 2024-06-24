@@ -12,7 +12,7 @@ modprobe spl
 modprobe zfs
 
 # Create ZPOOL and add first VDEV
-zpool create -f -o ashift=12 -O compression=lz4 -m none ${poolname} mirror "/dev/mapper/${luksdevices[0]}" "/dev/mapper/${luksdevices[1]}"
+zpool create -f -o ashift=12 -O compression=lz4 -o compatibility=openzfs-2.0-linux -m none ${poolname} mirror "/dev/mapper/${luksdevices[0]}" "/dev/mapper/${luksdevices[1]}"
 
 # Wait a bit
 sleep 5
