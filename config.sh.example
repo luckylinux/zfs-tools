@@ -8,7 +8,7 @@ if [[ ! -v toolpath ]]; then scriptpath=$(cd "$( dirname "${BASH_SOURCE[0]}" )" 
 #source ${toolpath}/config-pre/*.sh
 
 # Pool Name
-pool="zdata"
+poolname="zdata"
 
 # Partition Number
 lukspartnumber=1
