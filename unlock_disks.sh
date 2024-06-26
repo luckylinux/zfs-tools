@@ -5,7 +5,7 @@ relativepath="./" # Define relative path to go from this script to the root leve
 if [[ ! -v toolpath ]]; then scriptpath=$(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd ); toolpath=$(realpath --canonicalize-missing $scriptpath/$relativepath); fi
 
 # Load configuration
-source ${toolpath}/config.sh
+source ${toolpath}/load.sh
 
 # Pool name
 pool=${1:-'zdata'}
@@ -14,8 +14,7 @@ pool=${1:-'zdata'}
 type=${2:-'password'}
 
 # Load configuration
-#source config.sh
-configfile="/etc/zfs/config/$pool.sh"
+configfile=${3:-"/etc/zfs/config/${pool}.sh"}
 
 # Load configuration
 if [ -e "$configfile" ]; then
@@ -35,12 +34,23 @@ fi
 # Unlock all volumes at once
 for disk in "${disks[@]}"
 do
-    if [[ "${type}" == "password" ]]; then
-        # Password Unlock
-        echo -n $password | cryptsetup open "/dev/disk/by-id/${disk}-part${lukspartnumber}" "${disk}_crypt"
+    # Check if Disk is already unlocked
+    if [[ -e "/dev/mapper/${disk}_crypt" ]]
+    then
+        # Echo
+        echo "Device /dev/disk/by-id/${disk} is already unlocked at /dev/mapper/${disk}_crypt"
     else
-        # Clevis Unlock
-        clevis luks unlock -d "/dev/disk/by-id/${disk}-part${lukspartnumber}" -n "${disk}_crypt"
+        # Echo
+        echo "Unlocking Device /dev/disk/by-id/${disk}"
+
+        # Determine how to unlock Device
+        if [[ "${type}" == "password" ]]; then
+            # Password Unlock
+            echo -n $password | cryptsetup open "/dev/disk/by-id/${disk}-part${lukspartnumber}" "${disk}_crypt"
+        else
+            # Clevis Unlock
+            clevis luks unlock -d "/dev/disk/by-id/${disk}-part${lukspartnumber}" -n "${disk}_crypt"
+        fi
     fi
 done
 

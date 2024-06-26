@@ -15,39 +15,10 @@ type=${2:-'password'}
 
 # Load configuration
 #source config.sh
-configfile="/etc/zfs/config/$pool.sh"
+configfile=${3:-"/etc/zfs/config/${pool}.sh"}
 
-# Load configuration
-if [ -e "$configfile" ]; then
-    source $configfile
-else
-    echo "File <$configfile> does NOT exist ! Aborting ..."
-    exit 1
-fi
-
-# Unlock LUKS devices
-# Prompt user for LUKS password
-if [[ "${type}" == "password" ]]; then
-   echo -n "Enter the <$pool> Pool Password: "
-   read -s password
-fi
-
-# Unlock all volumes at once
-for disk in "${disks[@]}"
-do
-    if [[ "${type}" == "password" ]]; then
-        # Password Unlock
-        echo -n $password | cryptsetup open "/dev/disk/by-id/${disk}-part${lukspartnumber}" "${disk}_crypt"
-    else
-        # Clevis Unlock
-        clevis luks unlock -d "/dev/disk/by-id/${disk}-part${lukspartnumber}" -n "${disk}_crypt"
-    fi
-done
-
-# Unset variable in order to enhance security
-unset $password
-
-########bash unlock_encrypted_devices.sh $pool $type
+# Unlock Encrypted Devices
+source unlock_devices.sh "${pool}" "${type}" "${configfile}"
 
 # Import pool
 zpool import $pool
