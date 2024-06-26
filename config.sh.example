@@ -35,7 +35,7 @@ do
 done
 
 # Pool settings
-# Ashift=13 can lead to some overhead - Only applicable when using ZFS
+# Ashift=13 can lead to some overhead
 ashift=12
 
 # Partition sizes
