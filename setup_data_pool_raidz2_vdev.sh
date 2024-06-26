@@ -18,4 +18,4 @@ zpool create -f -o ashift=12 -O compression=lz4 -m none ${poolname} raidz2 "/dev
 sleep 5
 
 # Add Second 6-Disk RAIDZ2 VDEV
-zpool add -o ashift=12 ${poolname} mirror "/dev/mapper/${luksdevices[6]}" "/dev/mapper/${luksdevices[7]}" "/dev/mapper/${luksdevices[8]}" "/dev/mapper/${luksdevices[9]}" "/dev/mapper/${luksdevices[10]}" "/dev/mapper/${luksdevices[11]}"
+zpool add -o ashift=12 ${poolname} raidz2 "/dev/mapper/${luksdevices[6]}" "/dev/mapper/${luksdevices[7]}" "/dev/mapper/${luksdevices[8]}" "/dev/mapper/${luksdevices[9]}" "/dev/mapper/${luksdevices[10]}" "/dev/mapper/${luksdevices[11]}"
