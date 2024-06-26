@@ -34,6 +34,10 @@ do
    luksdevices+=("${disk}_crypt")
 done
 
+# Pool settings
+# Ashift=13 can lead to some overhead - Only applicable when using ZFS
+ashift=12
+
 # Partition sizes
 disk_size=3815448                     			# MiB 4TB
 partition_start=16					# MiB (2 MiB are usually required for LUKS header, leave some room for safety margin)
