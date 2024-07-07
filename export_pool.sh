@@ -4,15 +4,11 @@
 relativepath="./" # Define relative path to go from this script to the root level of the tool
 if [[ ! -v toolpath ]]; then scriptpath=$(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd ); toolpath=$(realpath --canonicalize-missing $scriptpath/$relativepath); fi
 
-# Load configuration
-source ${toolpath}/load.sh
-
 # Pool name
 pool=${1:-'zdata'}
 
 # Load configuration
-#source config.sh
-configfile="/etc/zfs/config/$pool.sh"
+source ${toolpath}/load.sh
 
 # Load configuration
 if [ -e "$configfile" ]

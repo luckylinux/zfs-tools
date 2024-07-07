@@ -4,9 +4,6 @@
 relativepath="./" # Define relative path to go from this script to the root level of the tool
 if [[ ! -v toolpath ]]; then scriptpath=$(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd ); toolpath=$(realpath --canonicalize-missing $scriptpath/$relativepath); fi
 
-# Load configuration
-source ${toolpath}/load.sh
-
 # Pool name
 pool=${1:-'zdata'}
 
@@ -14,8 +11,7 @@ pool=${1:-'zdata'}
 type=${2:-'password'}
 
 # Load configuration
-#source config.sh
-configfile=${3:-"/etc/zfs/config/${pool}.sh"}
+source ${toolpath}/load.sh
 
 # Unlock Encrypted Devices
 source unlock_devices.sh "${pool}" "${type}" "${configfile}"

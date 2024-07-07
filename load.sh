@@ -7,21 +7,25 @@ if [[ ! -v toolpath ]]; then scriptpath=$(cd "$( dirname "${BASH_SOURCE[0]}" )" 
 # Load files in config-pre/ Folder
 mapfile -t files < <( find "${toolpath}/config-pre/" -iname "*.sh" )
 
+# Define Configuration
+#configfile="${toolpath}/config.sh"
+configfile="/etc/zfs/config/${pool}.sh"
+
 # Process files in config-pre/ Folder
 for file in "${files[@]}"
 do
     source ${file}
 done
 
-# Check if config.sh exists
-if [[ ! -f "${toolpath}/config.sh" ]]
+# Check if Configuration File Exists
+if [[ ! -f "${configfile}" ]]
 then
-    echo "ERROR: file ${toolpath}/config.sh does NOT exist. Aborting !"
+    echo "ERROR: file ${configfile} does NOT exist. Aborting !"
     exit 9
 fi
 
-# Load Config File
-source ${toolpath}/config.sh
+# Load Configuration
+source ${configfile}
 
 # Load files in config-post/ Folder
 mapfile -t files < <( find "${toolpath}/config-post/" -iname "*.sh" )
