@@ -11,7 +11,7 @@ pool=${1:-"zdata"}
 type=${2:-"password"}
 
 # Load Configuration
-source "${toolpath}/load.sh" 
+source "${toolpath}/load.sh"
 
 # Unlock Encrypted Devices
 source unlock_devices.sh "${pool}" "${type}" "${configfile}"

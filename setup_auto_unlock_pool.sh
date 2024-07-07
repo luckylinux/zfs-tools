@@ -6,3 +6,6 @@ if [[ ! -v toolpath ]]; then scriptpath=$(cd "$( dirname "${BASH_SOURCE[0]}" )" 
 
 # Load configuration
 source "${toolpath}/load.sh"
+
+# Not yet implemented
+# ...
