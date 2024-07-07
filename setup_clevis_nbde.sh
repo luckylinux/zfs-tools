@@ -30,18 +30,19 @@ do
      for device in "${devices[@]}"
      do
 	# Echo
-	echo "Processing Device ${device}
+	echo "Processing Device ${device}"
 
 	# Check which keys are currently used via CLEVIS
 	list_device_keys=$(clevis luks list -d ${device}-part${lukspartnumber})
 
      	# Bind device to the TANG server via CLEVIS
-	if [[ "${list_device_keys}" == *"${keyserver}"* ]]; then
+	if [[ "${list_device_keys}" == *"${keyserver}"* ]]
+        then
         	echo "Keyserver <${keyserver}> is already installed onto <${device}> LUKS Header"
      	else
         	echo "Install Keyserver <${keyserver}> onto <${device}> LUKS Header"
-        	echo ${password} | clevis luks bind -d ${device}-part${lukspartnumber} tang "{\"url\": \"http://${keyserver}\" , \"adv\": \"/tmp/keyserver-${keyservercounter}.jws\" }"
-     	fi
+        	echo "${password}" | clevis luks bind -d ${device}-part${lukspartnumber} tang "{\"url\": \"http://${keyserver}\" , \"adv\": \"/tmp/keyserver-${keyservercounter}.jws\" }"
+	fi
 
 	# Get information about LUKS and Clevis Keyslots
 	cryptsetup luksDump ${device}-part${lukspartnumber}
