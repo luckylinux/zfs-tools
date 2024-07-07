@@ -28,6 +28,7 @@ do
 
      # For each disk device
      for device in "${devices[@]}"
+     do
 	# Echo
 	echo "Processing Device ${device}
 
