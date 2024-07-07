@@ -18,14 +18,17 @@ do
 done
 
 # Check if Configuration File Exists
-if [[ ! -f "${configfile}" ]]
+if [[ -f "${configfile}" ]]
 then
+    # Echo
+    echo "Load Configuration from ${configfile}"
+
+    # Load Configuration
+    source "${configfile}"
+else
     echo "ERROR: file ${configfile} does NOT exist. Aborting !"
     exit 9
 fi
-
-# Load Configuration
-source ${configfile}
 
 # Load files in config-post/ Folder
 mapfile -t files < <( find "${toolpath}/config-post/" -iname "*.sh" )

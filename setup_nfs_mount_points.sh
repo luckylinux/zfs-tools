@@ -5,13 +5,10 @@ relativepath="./" # Define relative path to go from this script to the root leve
 if [[ ! -v toolpath ]]; then scriptpath=$(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd ); toolpath=$(realpath --canonicalize-missing $scriptpath/$relativepath); fi
 
 # Load configuration
-source $toolpath/load.sh
+source "${toolpath}/load.sh"
 
 # Define target
 target="/export"
-
-# Define array
-mountpoints=( nextcloud syncthing seafile email aptcacherng git gitconfigbackup tools isos templates softwaredistribution fing nmap cache )
 
 # Create $target folder if not exist
 mkdir -p "${target}"
@@ -19,7 +16,6 @@ mkdir -p "${target}"
 # For each element create folder & set -i attribute
 for element in "${mountpoints[@]}"
 do
-:
     # Create mount point folder if not exist
     mkdir -p "${target}/${element}"
 

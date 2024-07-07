@@ -5,10 +5,10 @@ relativepath="./" # Define relative path to go from this script to the root leve
 if [[ ! -v toolpath ]]; then scriptpath=$(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd ); toolpath=$(realpath --canonicalize-missing $scriptpath/$relativepath); fi
 
 # Load configuration
-source $toolpath/load.sh
+source "${toolpath}/load.sh"
 
 # For each folder
 mount -a
 
-# Restart nfs
-/etc/init.d/nfs-kernel-server restart
+# Restart nfs if Installed
+if systemctl list-unit-files nfs-kernel-server.service &>/dev/null; then systemctl restart nfs-kernel-server; fi
