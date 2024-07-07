@@ -32,7 +32,9 @@ bash mount_exports.sh
 # Mount all datasets in /etc/fstab
 ########mount -a
 
-# Restart NFS & samba
-/etc/init.d/smbd restart
-/etc/init.d/nfs-kernel-server
-/etc/init.d/nfs-common restart
+# Restart NFS & Samba if they are Installed
+if systemctl list-unit-files smbd.service &>/dev/null; then systemctl restart smbd; fi
+
+if systemctl list-unit-files nfs-kernel-server.service &>/dev/null; then systemctl restart nfs-kernel-server; fi
+
+if systemctl list-unit-files nfs-common.service &>/dev/null; then systemctl restart nfs-common; fi
