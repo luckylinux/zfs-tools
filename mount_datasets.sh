@@ -4,14 +4,19 @@
 relativepath="./" # Define relative path to go from this script to the root level of the tool
 if [[ ! -v toolpath ]]; then scriptpath=$(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd ); toolpath=$(realpath --canonicalize-missing $scriptpath/$relativepath); fi
 
-# Load configuration
-source ${toolpath}/load.sh
+# Pool name
+pool=${1:-"zdata"}
 
-# Get list of datasets
-datasets=$(zfs list -H -o name | xargs -n1)
+# Load Configuration
+source "${toolpath}/load.sh"
+
+# Get List of Datasets
+datasets=$(zfs list -H -o name | xargs -n1 | grep -Ei "^${pool}")
 
 while IFS= read -r dataset; do
-    # Mount it
-    echo "Mount dataset $dataset"
-    zfs mount $dataset
-done <<< "$datasets"
+    # Echo
+    echo "Mount dataset ${dataset}"
+
+    # Mount Dataset
+    zfs mount ${dataset}
+done <<< "${datasets}"

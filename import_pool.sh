@@ -22,11 +22,11 @@ zpool import "${pool}"
 # Disable automatic mounting for Backup Datasets / Snapshots
 #######source "${toolpath}/disable_automatic_mounting_backup_snapshots.sh"
 
-# Import all Datasets
-source "${toolpath}/import_datasets.sh"
-
 # Mount Datasets
-source "${toolpath}/mount_exports.sh"
+source "${toolpath}/mount_datasets.sh" "${pool}"
+
+# Mount NFS Exports
+source "${toolpath}/mount_exports.sh" "${pool}"
 #######zfs mount -a
 
 # Mount all Datasets in /etc/fstab
