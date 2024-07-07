@@ -28,21 +28,23 @@ do
 
      # For each disk device
      for device in "${devices[@]}"
+	# Echo
+	echo "Processing Device ${device}
 
 	# Check which keys are currently used via CLEVIS
-	list_device_keys=$(clevis luks list -d ${device}-part1)
+	list_device_keys=$(clevis luks list -d ${device}-part${lukspartnumber})
 
      	# Bind device to the TANG server via CLEVIS
 	if [[ "${list_device_keys}" == *"${keyserver}"* ]]; then
         	echo "Keyserver <${keyserver}> is already installed onto <${device}> LUKS Header"
      	else
         	echo "Install Keyserver <${keyserver}> onto <${device}> LUKS Header"
-        	echo ${password} | clevis luks bind -d ${device}-part1 tang "{\"url\": \"http://${keyserver}\" , \"adv\": \"/tmp/keyserver-${keyservercounter}.jws\" }"
+        	echo ${password} | clevis luks bind -d ${device}-part${lukspartnumber} tang "{\"url\": \"http://${keyserver}\" , \"adv\": \"/tmp/keyserver-${keyservercounter}.jws\" }"
      	fi
 
 	# Get information about LUKS and Clevis Keyslots
-	cryptsetup luksDump ${device}-part1
-	clevis luks list -d ${device}-part1
+	cryptsetup luksDump ${device}-part${lukspartnumber}
+	clevis luks list -d ${device}-part${lukspartnumber}
      done
 
      # Increment counter
