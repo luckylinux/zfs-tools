@@ -30,7 +30,7 @@ do
      for device in "${devices[@]}"
 
 	# Check which keys are currently used via CLEVIS
-     	list_device_keys=$(clevis luks list -d ${device}-part1)
+	list_device_keys=$(clevis luks list -d ${device}-part1)
 
      	# Bind device to the TANG server via CLEVIS
 	if [[ "${list_device_keys}" == *"${keyserver}"* ]]; then
