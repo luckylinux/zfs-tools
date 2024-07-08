@@ -7,6 +7,9 @@ if [[ ! -v toolpath ]]; then scriptpath=$(cd "$( dirname "${BASH_SOURCE[0]}" )" 
 # Type of Unlocking
 type=${1:-"clevis"}
 
+# Load Functions
+source "${toolpath}/functions.sh"
+
 # Get List of Configured Pools
 mapfile -t configfiles < <( find "/etc/zfs-management/pool.conf.d" -iname "*.sh" )
 

@@ -11,7 +11,7 @@ RestartSec=30
 TimeoutStartSec=60
 Restart=on-failure
 User=root
-ExecStart={{toolpath}}/backup_all_pools.sh
+ExecStart={{toolpath}}/backup_all_pools.sh "syncoid"
 ExecStop=/bin/bash -c "echo \"Stopping Service. Pool will NOT be Exported.\""
 RemainAfterExit=yes
 
