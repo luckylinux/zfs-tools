@@ -15,7 +15,8 @@ source "${toolpath}/functions.sh"
 
 # Define Systemd Service File Name
 systemdconfigdir="/etc/systemd/system"
-servicefile="zfs-auto-unlock-import-pool@.service"
+servicename="zfs-auto-unlock-import-pool"
+servicefile="${servicename}@.service"
 destination="${systemdconfigdir}/${servicefile}"
 
 # Copy Systemd Service File
@@ -29,3 +30,9 @@ replace_text "${destination}" "toolpath" "${toolpath}"
 
 # Reload Systemd Daemon
 systemctl daemon-reload
+
+# Enable Service Start at Boot for the Selected Pool
+systemctl enable ${servicename}@${pool}.service
+
+# (Re)start Service for the Selected Pool
+systemctl enable ${servicename}@${pool}.service
