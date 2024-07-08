@@ -7,6 +7,12 @@ if [[ ! -v toolpath ]]; then scriptpath=$(cd "$( dirname "${BASH_SOURCE[0]}" )" 
 # Abort on Error
 set -e
 
+# Tool to use to Transfer ZFS Snapshots
+synctool=${1:-"syncoid"}
+
+# Load Functions
+source "${toolpath}/functions.sh"
+
 # Get List of Configured Pools
 mapfile -t configfiles < <( find "/etc/zfs-management/pool.conf.d" -iname "*.sh" )
 
