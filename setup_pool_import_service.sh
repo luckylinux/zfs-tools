@@ -32,4 +32,4 @@ systemctl daemon-reload
 systemctl enable "${servicename}"@"${pool}".service
 
 # (Re)start Service for the Selected Pool
-systemctl enable "${servicename}"@"${pool}".service
+systemctl restart "${servicename}"@"${pool}".service
