@@ -14,11 +14,12 @@ source "${toolpath}/load.sh"
 source "${toolpath}/functions.sh"
 
 # Define Systemd Service File Name
+systemdconfigdir="/etc/systemd/system"
 servicefile="zfs-auto-unlock-import-pool@.service"
 destination="${systemdconfigdir}/${servicefile}"
 
 # Copy Systemd Service File
-cp "etc/systemd/services/${servicefile}" "${destination}"
+cp "${toolpath}/etc/systemd/system/${servicefile}" "${destination}"
 
 # Make it Executable
 chmod +x "${destination}"
