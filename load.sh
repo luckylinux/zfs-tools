@@ -9,7 +9,7 @@ mapfile -t files < <( find "${toolpath}/config-pre/" -iname "*.sh" )
 
 # Define Configuration
 #configfile="${toolpath}/config.sh"
-configfile="/etc/zfs/config/${pool}.sh"
+configfile="/etc/zfs-management/conf.d/${pool}.sh"
 
 # Process files in config-pre/ Folder
 for file in "${files[@]}"
