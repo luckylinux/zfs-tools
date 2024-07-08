@@ -2,16 +2,13 @@
 
 # Determine toolpath if not set already
 relativepath="./" # Define relative path to go from this script to the root level of the tool
-if [[ ! -v toolpath ]]; then scriptpath=$(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd ); toolpath=$(realpath --canonicalize-missing ${scriptpath}/${relativepath}); fi
+if [[ ! -v toolpath ]]; then scriptpath=$(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd ); toolpath=$(realpath --canonicalize-missing "${scriptpath}/${relativepath}"); fi
 
 # Pool Name
 pool=${1:-"zdata"}
 
-# Load Configuration
+# Load Configuration and Functions
 source "${toolpath}/load.sh"
-
-# Load functions
-source "${toolpath}/functions.sh"
 
 # Define Systemd Service File Name
 systemdconfigdir="/etc/systemd/system"
@@ -32,7 +29,7 @@ replace_text "${destination}" "toolpath" "${toolpath}"
 systemctl daemon-reload
 
 # Enable Service Start at Boot for the Selected Pool
-systemctl enable ${servicename}@${pool}.service
+systemctl enable "${servicename}"@"${pool}".service
 
 # (Re)start Service for the Selected Pool
-systemctl enable ${servicename}@${pool}.service
+systemctl enable "${servicename}"@"${pool}".service
