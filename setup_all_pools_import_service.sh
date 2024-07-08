@@ -30,7 +30,7 @@ systemctl daemon-reload
 # Per-Pool Import can be Manually Configured using <zfs-auto-unlock-import-pool@.service> Instead
 
 # Enable Service Start at Boot for the Selected Pool
-systemctl enable "${servicename}"@.service
+systemctl enable "${servicename}".service
 
 # (Re)start Service for the Selected Pool
 systemctl restart "${servicename}".service
