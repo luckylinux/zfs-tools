@@ -14,7 +14,7 @@ type=${2:-"password"}
 source "${toolpath}/load.sh"
 
 # Unlock Encrypted Devices
-source unlock_devices.sh "${pool}" "${type}" "${configfile}"
+source "${toolpath}/unlock_devices.sh" "${pool}" "${type}" "${configfile}"
 
 # Import Pool
 zpool import "${pool}"
