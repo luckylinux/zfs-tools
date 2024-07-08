@@ -1,5 +1,5 @@
 [Unit]
-Description=Unlock and Import Single ZFS Pool Automatically
+Description=Unlock and Import ZFS Pool Automatically
 Wants=network-online.target
 After=network.target network-online.target
 StartLimitIntervalSec=0
@@ -11,7 +11,7 @@ RestartSec=30
 TimeoutStartSec=60
 Restart=on-failure
 User=root
-ExecStart={{toolpath}}/import_single_pool.sh "%i" "clevis" "/etc/zfs-management/pool.conf.d/%i.sh"
+ExecStart={{toolpath}}/import_pool.sh "%i" "clevis" "/etc/zfs-management/pool.conf.d/%i.sh"
 ExecStop=/bin/bash -c "echo \"Stopping Service. Pool will NOT be Exported.\""
 RemainAfterExit=yes
 
