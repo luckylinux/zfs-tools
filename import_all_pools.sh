@@ -19,6 +19,9 @@ do
     # Load Configuration File in Order to Load <pool> Parameter
     source "${configfile}"
 
+    # Map poolname -> pool
+    pool="${poolname}"
+
     # Alternative Approach: get <pool> Parameter from Filename
     #pool=$(echo basename "${configfile}" | sed -E "s|^([0-9a-zA-Z]*?)\.sh|\1|"
 
