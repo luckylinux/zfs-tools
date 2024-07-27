@@ -8,8 +8,14 @@ if [[ ! -v toolpath ]]; then scriptpath=$(cd "$( dirname "${BASH_SOURCE[0]}" )" 
 mapfile -t files < <( find "${toolpath}/config-pre/" -iname "*.sh" )
 
 # Define Configuration
-#configfile="${toolpath}/config.sh"
-configfile="/etc/zfs-management/pool.conf.d/${pool}.sh"
+if [ -n "${pool}" ] && [ -d "/etc/zfs-management/" ] && [ -d "/etc/zfs-management/pool.conf.d" ] && [ -f "/etc/zfs-management/pool.conf.d/${pool}.sh" ]
+then
+    # Use "Production" Configuration File from "/etc/zfs-management/pool.conf.d/${pool}.sh"
+    configfile="/etc/zfs-management/pool.conf.d/${pool}.sh"
+else
+    # Use "Testing" Configuration File from "${toolpath}/config.sh"
+    configfile="${toolpath}/config.sh"
+fi
 
 # Process files in config-pre/ Folder
 for file in "${files[@]}"
