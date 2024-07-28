@@ -13,7 +13,7 @@ device=${1:-""}
 # Ask interactively if not specified
 if [[ -z "${device}" ]]
 then
-    read -p "Enter the Device ID to be erased (e.g. ata-XXXXXXXXXXXXXX): " device
+    read -p "Enter the Device ID to be erased/(re)initialized (e.g. ata-XXXXXXXXXXXXXX): " device
 fi
 
 # Display device informations
@@ -21,7 +21,7 @@ parted /dev/disk/by-id/${device} print
 
 # Prompt user for confirmation
 while true; do
-      read -p "Erase all partitions on /dev/disk/by-id/${device} ? [y / n] " answer
+      read -p "Erase all Partitions on /dev/disk/by-id/${device} and (re)initialize Drive ? [y / n] " answer
       case $answer in
            [Yy]* ) break;;
            [Nn]* ) exit;;

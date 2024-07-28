@@ -16,7 +16,7 @@ do
 
 	# Prompt user for confirmation
 	while true; do
-               	read -p "Erase all partitions on /dev/disk/by-id/$device ? [y / n] " answer
+               	read -p "Erase all Partitions on /dev/disk/by-id/$device and (re)initialize Drive ? [y / n] " answer
                	case $answer in
                        	[Yy]* ) break;;
               		[Nn]* ) exit;;
