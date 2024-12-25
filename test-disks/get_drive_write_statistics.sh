@@ -54,9 +54,14 @@ do
    GB_written=$(echo "scale=3; ${B_written} / ${BYTES_PER_GB}" | bc)
    TB_written=$(echo "scale=3; ${B_written} / ${BYTES_PER_TB}" | bc)
 
+   # Get Firmware Version
+   fw_version=$(smarctl -a /dev/disk/by-id/${disk} | grep -i Firmware | awk '{print $3}')
+
    # Echo
    echo -e "\t------------------------------"
    echo -e "\t SSD Status:   ${disk}"
+   echo -e "\t------------------------------"
+   echo -e "\t Firmware Version: ${fw_version}"
    echo -e "\t------------------------------"
    echo -e "\t On time:      $(echo ${on_time} | sed ':a;s/\B[0-9]\{3\}\>/,&/;ta') hr"
    echo -e "\t------------------------------"
