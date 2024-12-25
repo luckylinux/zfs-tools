@@ -55,7 +55,7 @@ do
    TB_written=$(echo "scale=3; ${B_written} / ${BYTES_PER_TB}" | bc)
 
    # Get Firmware Version
-   fw_version=$(smarctl -a /dev/disk/by-id/${disk} | grep -i Firmware | awk '{print $3}')
+   fw_version=$(smartctl -a /dev/disk/by-id/${disk} | grep -i Firmware | awk '{print $3}')
 
    # Echo
    echo -e "\t------------------------------"
