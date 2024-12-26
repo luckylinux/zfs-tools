@@ -43,5 +43,15 @@ do
     fi
 done
 
+# Add Basic Check to make sure the Devices have all been unlocked
+for disk in "${disks[@]}"
+do
+    # Freeze execution until /dev/mapper/${disk}_crypt will have been created
+    inotifywait -e create --timeout 5 --include filename "/dev/mapper/${disk}_crypt"
+
+    # Echo
+    echo "Device /dev/disk/by-id/${disk} unlocked at /dev/mapper/${disk}_crypt. Continuing."
+done
+
 # Unset variable in order to enhance security
 unset ${password}
