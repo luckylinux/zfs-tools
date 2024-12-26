@@ -34,6 +34,9 @@ sleep 5
 # Clear errors in case of delay in Device Discovery
 zpool clear "${pool}"
 
+# Clear errors in case of delay in Device Discovery
+zpool reopen
+
 # Disable automatic mounting for Backup Datasets / Snapshots
 #######source "${toolpath}/disable_automatic_mounting_backup_snapshots.sh"
 
