@@ -17,19 +17,20 @@ source "${toolpath}/load.sh"
 source "${toolpath}/unlock_devices.sh" "${pool}" "${type}" "${configfile}"
 
 # Wait a bit
-sleep 5
+sleep 15
 
 # Setup LOOP Devices if required
-source "${toolpath}/setup_loop_devices.sh" "${pool}" "${type}" "${configfile}"
+# ?? Not required anymore since ZFS 2.2.7 ??
+# source "${toolpath}/setup_loop_devices.sh" "${pool}" "${type}" "${configfile}"
 
 # Wait a bit
-sleep 5
+# sleep 15
 
 # Import Pool
 zpool import "${pool}"
 
 # Wait a bit
-sleep 5
+sleep 15
 
 # Clear errors in case of delay in Device Discovery
 zpool clear "${pool}"

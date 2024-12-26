@@ -10,11 +10,13 @@ pool=${1:-"zdata"}
 # Load Configuration and Functions
 source "${toolpath}/load.sh"
 
-# Unlock all volumes at once
-for disk in "${disks[@]}"
-do
+# Not needed anymore ?
 
-done
+# Unlock all volumes at once
+# for disk in "${disks[@]}"
+# do
+# 
+# done
 
 # Unset variable in order to enhance security
 unset ${password}
