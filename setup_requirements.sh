@@ -4,8 +4,8 @@
 relativepath="./" # Define relative path to go from this script to the root level of the tool
 if [[ ! -v toolpath ]]; then scriptpath=$(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd ); toolpath=$(realpath --canonicalize-missing "${scriptpath}/${relativepath}"); fi
 
-# Pool Name
-poolname=${1:-"zdata"}
+# Disable Configuration Loading
+disable_config_loading="yes"
 
 # Load Configuration and Functions
 source "${toolpath}/load.sh"

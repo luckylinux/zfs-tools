@@ -23,17 +23,21 @@ do
     source "${file}"
 done
 
-# Check if Configuration File Exists
-if [[ -f "${configfile}" ]]
+# Check if it's needed to use Configuration
+if [ -z "${disable_config_loading}" ] || [ "${disable_config_loading}" != "yes" ]
 then
-    # Echo
-    echo "Load Configuration from ${configfile}"
+    # Check if Configuration File Exists
+    if [[ -f "${configfile}" ]]
+    then
+        # Echo
+        echo "Load Configuration from ${configfile}"
 
-    # Load Configuration
-    source "${configfile}"
-else
-    echo "ERROR: file ${configfile} does NOT exist. Aborting !"
-    exit 9
+        # Load Configuration
+        source "${configfile}"
+    else
+        echo "ERROR: file ${configfile} does NOT exist. Aborting !"
+        exit 9
+    fi
 fi
 
 # Load files in config-post/ Folder
