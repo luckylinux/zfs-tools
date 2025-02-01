@@ -10,11 +10,25 @@ pool=${1:-"zdata"}
 # Load Configuration and Functions
 source "${toolpath}/load.sh"
 
-# Update APT Lists
-apt-get update
+# Get Distribution OS Release
+distribution=$(get_os_release)
 
-# Install clevis on the system and add clevis to the initramfs
-apt-get install --yes clevis clevis-luks clevis-initramfs cryptsetup-initramfs
+# Install Requirements
+if [ "${distribution}" == "debian" ] || [ "${distribution}" == "ubuntu" ]
+then
+   # Update APT Lists
+   apt-get update
+
+   # Install Clevis on the System and add Clevis to the Initramfs
+   apt-get install --yes clevis clevis-luks clevis-initramfs cryptsetup-initramfs
+elif [[ "${}" == "fedora" ]]
+then
+   # Update DNF Lists
+   dnf update
+
+   # Install Clevis on the System and add Clevis to the Initramfs
+   dnf -y clevis clevis-luks clevis-dracut
+fi
 
 # Ask for password
 read -s -p "Enter encryption password: " password
@@ -56,6 +70,11 @@ done
 # Clear password from memory
 unset $password
 
-# Update initramfs
-update-initramfs -c -k all
-
+# Rebuild initramfs
+if [ "${distribution}" == "debian" ] || [ "${distribution}" == "ubuntu" ]
+then
+    update-initramfs -k all -u
+elif [ "${distribution}" == "fedora" ]
+then
+    dracut --regenerate-all --force
+fi
