@@ -13,6 +13,9 @@ type=${2:-"password"}
 # Load Configuration and Functions
 source "${toolpath}/load.sh"
 
+# Wait a bit
+sleep 5
+
 # Unlock LUKS devices
 # Prompt user for LUKS password
 if [[ "${type}" == "password" ]]; then
