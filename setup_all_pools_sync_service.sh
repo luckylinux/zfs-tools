@@ -17,8 +17,9 @@ servicefile="${servicename}.service"
 destination="${systemdconfigdir}/${servicefile}"
 cp "${toolpath}/etc/systemd/system/${servicefile}" "${destination}"
 
-# Make it Executable
-chmod +x "${destination}"
+# Make it Executable (NOT required by Systemd, we get a Warning if we make it executable)
+# chmod +x "${destination}"
+
 # Set the Correct Path (to the Folder where import_pool.sh is located)
 replace_text "${destination}" "toolpath" "${toolpath}"
 
