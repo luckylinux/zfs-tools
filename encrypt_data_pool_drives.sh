@@ -25,6 +25,15 @@ if [ $password == $verify ]; then
                 # Get Device Mapper Name
                 dm_name=$(get_device_mapper_name "${disk_config}")
 
+                # Get Real Path
+                disk_real_path=$(readlink --canonicalize-missing "/dev/disk/by-id/${disk_name}")
+
+                # Get Disk Size of Current Disk
+                disk_size_current=$(parted -s "${disk_real_path}" unit MiB print free 2> /dev/null | grep -E "^Disk /dev/" | head -n1 | sed -E "s|Disk ${disk_real_path}: ([0-9]+)MiB|\1|g")
+
+                # Determine Partition End Location
+                partition_end=$(($disk_size_current-$partition_start-$partition_margin))
+
         	# Display device informations
         	parted /dev/disk/by-id/$device print
 
