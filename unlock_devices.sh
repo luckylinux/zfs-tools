@@ -39,10 +39,10 @@ do
     if [[ -e "/dev/mapper/${dm_name}" ]]
     then
         # Echo
-        echo "Device /dev/disk/by-id/${disk_name} is already unlocked at /dev/mapper/${dm_name}"
+        echo "Device /dev/disk/by-id/${disk_name}-part${partition_number} is already unlocked at /dev/mapper/${dm_name}"
     else
         # Echo
-        echo "Unlocking Device /dev/disk/by-id/${disk_name}"
+        echo "Unlocking Device /dev/disk/by-id/${disk_name}-part${partition_number}"
 
         # Determine how to unlock Device
         if [[ "${type}" == "password" ]]; then
@@ -71,7 +71,7 @@ do
     inotifywait -e create --timeout 5 --include filename "/dev/mapper/${dm_name}"
 
     # Echo
-    echo "Device /dev/disk/by-id/${disk_name}-${partition_number} unlocked at /dev/mapper/${dm_name}. Continuing."
+    echo "Device /dev/disk/by-id/${disk_name}-part${partition_number} unlocked at /dev/mapper/${dm_name}. Continuing."
 done
 
 # Unset variable in order to enhance security

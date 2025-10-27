@@ -176,5 +176,5 @@ get_device_mapper_name() {
     ldm_name="${ldm_name}_crypt"
 
     # Return Value
-    echo "${lm_name}"
+    echo "${ldm_name}"
 }
