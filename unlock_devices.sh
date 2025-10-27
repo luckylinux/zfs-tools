@@ -56,6 +56,7 @@ do
 done
 
 # Add Basic Check to make sure the Devices have all been unlocked
+echo "Checking that all Devices are correctly unlocked as expected"
 for disk_config in "${disks[@]}"
 do
     # Get Disk Path
@@ -71,7 +72,7 @@ do
     inotifywait -e create --timeout 5 --include filename "/dev/mapper/${dm_name}"
 
     # Echo
-    echo "Device /dev/disk/by-id/${disk_name}-part${partition_number} unlocked at /dev/mapper/${dm_name}. Continuing."
+    echo -e "\tDevice /dev/disk/by-id/${disk_name}-part${partition_number} was correctly unlocked at /dev/mapper/${dm_name}. Continuing."
 done
 
 # Unset variable in order to enhance security
