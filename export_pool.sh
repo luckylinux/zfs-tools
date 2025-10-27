@@ -14,9 +14,19 @@ source "${toolpath}/load.sh"
 zpool export "${pool}"
 
 # Lock all volumes at once
-for disk in "${disks[@]}"
+for disk_config in "${disks[@]}"
 do
-     cryptsetup luksClose "${disk}_crypt"
+    # Get Disk Path
+    disk_name=$(get_disk_reference "${disk_config}")
+
+    # Get Disk Partition Number
+    partition_number=$(get_disk_partition_number "${disk_config}")
+
+    # Get Device Mapper Name
+    dm_name=$(get_device_mapper_name "${disk_config}")
+
+    # Close Disk
+    cryptsetup luksClose "${dm_name}"
 done
 
 # Unset variable in order to enhance security

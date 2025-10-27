@@ -56,13 +56,22 @@ do
 done
 
 # Add Basic Check to make sure the Devices have all been unlocked
-for disk in "${disks[@]}"
+for disk_config in "${disks[@]}"
 do
-    # Freeze execution until /dev/mapper/${disk}_crypt will have been created
+    # Get Disk Path
+    disk_name=$(get_disk_reference "${disk_config}")
+
+    # Get Disk Partition Number
+    partition_number=$(get_disk_partition_number "${disk_config}")
+
+    # Get Device Mapper Name
+    dm_name=$(get_device_mapper_name "${disk_config}")
+
+    # Freeze execution until /dev/mapper/${dm_name} will have been created
     inotifywait -e create --timeout 5 --include filename "/dev/mapper/${dm_name}"
 
     # Echo
-    echo "Device /dev/disk/by-id/${disk} unlocked at /dev/mapper/${dm_name}. Continuing."
+    echo "Device /dev/disk/by-id/${disk_name}-${partition_number} unlocked at /dev/mapper/${dm_name}. Continuing."
 done
 
 # Unset variable in order to enhance security
