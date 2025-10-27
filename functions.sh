@@ -161,6 +161,10 @@ get_device_mapper_name() {
     # Input Arguments
     local ldisk_config="$1"
 
+    # Get Disk Name
+    local ldisk_name
+    ldisk_name=$(echo "${ldisk_config}" | cut -d "|" -f 1)
+
     # Get Device Mapper Name
     local ldm_name
     ldm_name=$(echo "${ldisk_config}" | cut -d "|" -f 3)
@@ -174,6 +178,9 @@ get_device_mapper_name() {
 
     # Add "_crypt" Suffix
     ldm_name="${ldm_name}_crypt"
+
+    # Add Disk Name Prefix
+    ldm_name="${disk_name}_${ldm_name}"
 
     # Return Value
     echo "${ldm_name}"
