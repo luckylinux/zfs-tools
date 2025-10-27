@@ -13,26 +13,42 @@ poolname="zdata"
 # Partition Number
 lukspartnumber=1
 
-# Disks to be used
+# All Disks to be used
 disks=()
-disks+=("ata-WDC_WDXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX1")
-disks+=("ata-WDC_WDXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX2")
-disks+=("ata-WDC_WDXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX3")
-disks+=("ata-WDC_WDXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX4")
-disks+=("ata-WDC_WDXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX5")
-disks+=("ata-WDC_WDXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX6")
 
-# Device names
-devices=()
-luksdevices=()
-for disk in "${disks[@]}"
-do
-   # Device Path
-   devices+=("/dev/disk/by-id/${disk}")
+# Storage Disks
+# Format: "ata-<DISK_BRAND>_<DISK_MODEL>_<DISK_SERIAL>|<DISK_PARTITION>|<DEVICE_MAPPER_NAME>"
+# Defaults:
+# - DISK_PARTITION = 1
+# - DEVICE_MAPPER_NAME = <none> (do NOT add leading or trailing Underscores nor "_crypt" suffix !)
+#
+disks_storage=()
+disks_storage+=("ata-WDC_WDXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX1|1|data")
+disks_storage+=("ata-WDC_WDXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX2|1|data")
+disks_storage+=("ata-WDC_WDXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX3|1|data")
+disks_storage+=("ata-WDC_WDXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX4|1|data")
+disks_storage+=("ata-WDC_WDXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX5|1|data")
+disks_storage+=("ata-WDC_WDXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX6|1|data")
 
-   # LUKS Device Name
-   luksdevices+=("${disk}_crypt")
-done
+# Special VDEV
+disks_specials=()
+disks_specials+=("ata-CT500MX500SSD1_aaaaaaaaaaaa|1|data")
+disks_specials+=("ata-CT500MX500SSD1_bbbbbbbbbbbb|1|data")
+
+# SLOG
+#disks_slogs=()
+#disks_slogs+=("nvme-XXXXX_YYYYYYYY_ZZZZZZZZZZZZZZ|1|slog")
+#disks_slogs+=("")
+
+# L2ARC Drive(s)
+disks_l2arcs=()
+disks_l2arc+=("nvme-XXXXX_YYYYYYYY_ZZZZZZZZZZZZZZ|1|l2arc")
+
+# Add to Disks
+for d in "${disks_storage[@]}"; do disks+=($d); done
+for d in "${disks_specials[@]}"; do disks+=($d); done
+for d in "${disks_slogs[@]}"; do disks+=($d); done
+for d in "${disks_l2arcs[@]}"; do disks+=($d); done
 
 # Pool settings
 # Ashift=13 can lead to some overhead
@@ -54,4 +70,3 @@ mountpoints+=("folder3")
 
 # CLEVIS/TANG Automated LUKS unlocking
 keyservers=("192.168.1.15" "192.168.1.16" "192.168.1.17" "192.168.1.18")
-

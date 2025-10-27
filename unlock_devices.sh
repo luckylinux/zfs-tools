@@ -24,24 +24,33 @@ if [[ "${type}" == "password" ]]; then
 fi
 
 # Unlock all volumes at once
-for disk in "${disks[@]}"
+for disk_config in "${disks[@]}"
 do
+    # Get Disk Path
+    disk_name=$(get_disk_reference "${disk_config}")
+
+    # Get Disk Partition Number
+    partition_number=$(get_disk_partition_number "${disk_config}")
+
+    # Get Device Mapper Name
+    dm_name=$(get_device_mapper_name "${disk_config}")
+
     # Check if Disk is already unlocked
-    if [[ -e "/dev/mapper/${disk}_crypt" ]]
+    if [[ -e "/dev/mapper/${dm_name}" ]]
     then
         # Echo
-        echo "Device /dev/disk/by-id/${disk} is already unlocked at /dev/mapper/${disk}_crypt"
+        echo "Device /dev/disk/by-id/${disk_name} is already unlocked at /dev/mapper/${dm_name}"
     else
         # Echo
-        echo "Unlocking Device /dev/disk/by-id/${disk}"
+        echo "Unlocking Device /dev/disk/by-id/${disk_name}"
 
         # Determine how to unlock Device
         if [[ "${type}" == "password" ]]; then
             # Password Unlock
-            echo -n "${password}" | cryptsetup open "/dev/disk/by-id/${disk}-part${lukspartnumber}" "${disk}_crypt"
+            echo -n "${password}" | cryptsetup open "/dev/disk/by-id/${disk_name}-part${partition_number}" "${dm_name}"
         else
             # Clevis Unlock
-            clevis luks unlock -d "/dev/disk/by-id/${disk}-part${lukspartnumber}" -n "${disk}_crypt"
+            clevis luks unlock -d "/dev/disk/by-id/${disk_name}-part${partition_number}" -n "${dm_name}"
         fi
     fi
 done
@@ -50,10 +59,10 @@ done
 for disk in "${disks[@]}"
 do
     # Freeze execution until /dev/mapper/${disk}_crypt will have been created
-    inotifywait -e create --timeout 5 --include filename "/dev/mapper/${disk}_crypt"
+    inotifywait -e create --timeout 5 --include filename "/dev/mapper/${dm_name}"
 
     # Echo
-    echo "Device /dev/disk/by-id/${disk} unlocked at /dev/mapper/${disk}_crypt. Continuing."
+    echo "Device /dev/disk/by-id/${disk} unlocked at /dev/mapper/${dm_name}. Continuing."
 done
 
 # Unset variable in order to enhance security

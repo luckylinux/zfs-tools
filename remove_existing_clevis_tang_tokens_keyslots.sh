@@ -11,10 +11,19 @@ source "${toolpath}/load.sh"
 read -s -p "Enter encryption password: " password
 
 # For each Device
-for device in "${devices[@]}"
+for disk_config in "${disks[@]}"
 do
+    # Get Disk Path
+    disk_name=$(get_disk_reference "${disk_config}")
+
+    # Get Disk Partition Number
+    partition_number=$(get_disk_partition_number "${disk_config}")
+
+    # Get Device Mapper Name
+    dm_name=$(get_device_mapper_name "${disk_config}")
+
     # Existing CLEVIS Tang Slots
-    mapfile existing_clevis_tang_keyslots < <(clevis luks list -d $device-part${lukspartnumber} | grep -E "[0-9]+: tang" | sed -E "s|([0-9]+): tang.*|\1|g")
+    mapfile existing_clevis_tang_keyslots < <(clevis luks list -d /dev/disk/by-id/${disk_name}-part${partition_number} | grep -E "[0-9]+: tang" | sed -E "s|([0-9]+): tang.*|\1|g")
 
     # Initialize Counter
     counter=1
@@ -23,8 +32,8 @@ do
     for existing_clevis_tang_keyslot in "${existing_clevis_tang_keyslots[@]}"
     do
         # Unbind device from the TANG server via CLEVIS
-        echo "Remove Keyserver <$keyserver> from $device LUKS Header"
-        echo $password | clevis luks unbind -d ${device}-part${lukspartnumber} -s ${existing_clevis_tang_keyslot}
+        echo "Remove Keyserver <${keyserver}> from $device LUKS Header"
+        echo $password | clevis luks unbind -d /dev/disk/by-id/${disk_name}-part${partition_number} -s ${existing_clevis_tang_keyslot}
 
         # Increment counter
         counter=$((counter+1))
@@ -38,8 +47,18 @@ unset $password
 # update-initramfs -k all -u
 
 # Get information
-for disk in "${disks[@]}"
+for disk_config in "${disks[@]}"
 do
-    cryptsetup luksDump /dev/disk/by-id/${disk}-part${lukspartnumber}
-    clevis luks list -d /dev/disk/by-id/${disk}-part${lukspartnumber}
+    # Get Disk Path
+    disk_name=$(get_disk_reference "${disk_config}")
+
+    # Get Disk Partition Number
+    partition_number=$(get_disk_partition_number "${disk_config}")
+
+    # Get Device Mapper Name
+    dm_name=$(get_device_mapper_name "${disk_config}")
+
+    # Get Keyslots Information
+    cryptsetup luksDump /dev/disk/by-id/${disk_name}-part${partition_number}
+    clevis luks list -d /dev/disk/by-id/${disk_name}-part${partition_number}
 done

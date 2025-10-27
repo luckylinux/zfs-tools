@@ -14,8 +14,17 @@ read -s -p "Verify encryption password: " verify
 
 if [ $password == $verify ]; then
 
-	for device in "${disks[@]}"
+	for disk_config in "${disks[@]}"
 	do
+                # Get Disk Path
+                disk_name=$(get_disk_reference "${disk_config}")
+
+                # Get Disk Partition Number
+                partition_number=$(get_disk_partition_number "${disk_config}")
+
+                # Get Device Mapper Name
+                dm_name=$(get_device_mapper_name "${disk_config}")
+
         	# Display device informations
         	parted /dev/disk/by-id/$device print
 
@@ -39,8 +48,8 @@ if [ $password == $verify ]; then
 		sleep 5
 
 		# Encrypt disks
-		#echo $password | cryptsetup -v --type luks2 --cipher aes-xts-plain64:sha512 --hash sha512 --key-size 512 --use-random --iter-time 5000 --verify-passphrase luksFormat /dev/disk/by-id/"${device}-part1"
-		echo $password | cryptsetup -q -v --type luks2 --cipher aes-xts-plain64 --hash sha512 --key-size 512 --use-random --iter-time 5000 luksFormat /dev/disk/by-id/"${device}-part1"
+		# echo $password | cryptsetup -v --type luks2 --cipher aes-xts-plain64:sha512 --hash sha512 --key-size 512 --use-random --iter-time 5000 --verify-passphrase luksFormat /dev/disk/by-id/"${disk_name}-part${partition_number}"
+		echo $password | cryptsetup -q -v --type luks2 --cipher aes-xts-plain64 --hash sha512 --key-size 512 --use-random --iter-time 5000 luksFormat /dev/disk/by-id/"${disk_name}-part${partition_number}"
 	done
 else
 	echo "Password do not match. Aborting ..."

@@ -119,3 +119,62 @@ systemd_exists_isnotmasked() {
         return 1
     fi
 }
+
+# Get Disk Reference from Disk Configuration in config.sh
+get_disk_reference() {
+    # Input Arguments
+    local ldisk_config="$1"
+
+    # Get Disk Name
+    local ldisk_name
+    ldisk_name=$(echo "${ldisk_config}" | cut -d "|" -f 1)
+
+    # Return Value
+    return "${ldisk_name}"
+}
+
+# Get Disk Partition Number from Disk Configuration in config.sh
+get_disk_partition_number() {
+    # Input Arguments
+    local ldisk_config="$1"
+
+    # Get Partition number
+    local lpartition_number
+    lpartition_number=$(echo "${ldisk_config}" | cut -d "|" -f 2)
+
+    # Check if Value is empty
+    if [[ -z "${lpartition_number}" ]]
+    then
+        # Default to lukspartnumber
+        # Need to solve Circular Dependency ...
+        #
+        # Default to Partition 1 for now at least
+        lpartition_number=1
+    fi
+
+    # Return Value
+    return "${lpartition_number}"
+}
+
+# Get Device Mapper Name from Disk Configuration in config.sh
+get_device_mapper_name() {
+    # Input Arguments
+    local ldisk_config="$1"
+
+    # Get Device Mapper Name
+    local ldm_name
+    ldm_name=$(echo "${ldisk_config}" | cut -d "|" -f 3)
+
+    # Check if Value is empty
+    # if [[ -z "${ldm_name}" ]]
+    # then
+    #     # Default to ...
+    #     ldm_name=""
+    # fi
+
+    # Add "_crypt" Suffix
+    ldm_name="${ldm_name}_crypt"
+
+    # Return Value
+    return "${lm_name}"
+}
