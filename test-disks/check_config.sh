@@ -14,15 +14,24 @@ mkdir -p "${toolpath}/badblocks"
 counter=1
 
 # For each device
-for device in "${disks[@]}"
+for disk-config in "${disks[@]}"
 do
-	if [ -h "/dev/disk/by-id/${device}" ]
-	then
-		echo "[$counter] Device /dev/disk/by-id/${device} exists"
-	else
-		echo "[$counter] ERROR: Device /dev/disk/by-id/${device} does not exist !"
-	fi
+    # Get Disk Path
+    disk_name=$(get_disk_reference "${disk_config}")
 
-	# Increase counter
-	counter=$(($counter+1))
+    # Get Disk Partition Number
+    partition_number=$(get_disk_partition_number "${disk_config}")
+
+    # Get Device Mapper Name
+    dm_name=$(get_device_mapper_name "${disk_config}")
+
+    if [ -h "/dev/disk/by-id/${disk_name}" ]
+    then
+        echo "[$counter] Device /dev/disk/by-id/${disk_name} exists"
+    else
+        echo "[$counter] ERROR: Device /dev/disk/by-id/${disk_name} does not exist !"
+    fi
+
+    # Increase counter
+    counter=$(($counter+1))
 done

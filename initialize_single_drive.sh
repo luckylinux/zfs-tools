@@ -7,21 +7,21 @@ if [[ ! -v toolpath ]]; then scriptpath=$(cd "$( dirname "${BASH_SOURCE[0]}" )" 
 # Load Configuration and Functions
 source "${toolpath}/load.sh"
 
-# Device to be encrypted
-device=${1:-""}
+# Disk Name to be encrypted
+disk_name=${1:-""}
 
 # Ask interactively if not specified
-if [[ -z "${device}" ]]
+if [[ -z "${disk_name}" ]]
 then
-    read -p "Enter the Device ID to be erased/(re)initialized (e.g. ata-XXXXXXXXXXXXXX): " device
+    read -p "Enter the Disk Name to be erased/(re)initialized (e.g. ata-XXXXXXXXXXXXXX): " disk_name
 fi
 
 # Display device informations
-parted /dev/disk/by-id/${device} print
+parted /dev/disk/by-id/${disk_name} print
 
 # Prompt user for confirmation
 while true; do
-      read -p "Erase all Partitions on /dev/disk/by-id/${device} and (re)initialize Drive ? [y / n] " answer
+      read -p "Erase all Partitions on /dev/disk/by-id/${disk_name} and (re)initialize Drive ? [y / n] " answer
       case $answer in
            [Yy]* ) break;;
            [Nn]* ) exit;;
@@ -30,4 +30,4 @@ while true; do
 done
 
 # Create GPT label
-parted -s /dev/disk/by-id/${device} mklabel GPT
+parted -s /dev/disk/by-id/${disk_name} mklabel GPT

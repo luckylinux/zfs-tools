@@ -53,15 +53,15 @@ then
     partition_end=$(($disk_size_current-$partition_start-$partition_margin))
 
     # Create GPT label
-    parted -s /dev/disk/by-id/${device} mklabel GPT
+    parted -s /dev/disk/by-id/${disk_name} mklabel GPT
 
     # Create one partition
-    parted --align=opt /dev/disk/by-id/${device} mkpart primary "${partition_start}MiB" "${partition_end}MiB"
+    parted --align=opt /dev/disk/by-id/${disk_name} mkpart primary "${partition_start}MiB" "${partition_end}MiB"
 
     # Wait for link in /dev/disk/by-id/ to "*-part1" to be created
     sleep 5
 fi
 
 # Encrypt disks
-# cryptsetup -v --cipher aes-xts-plain64:sha512 --hash sha512 --key-size 512 --use-random --iter-time 5000 --verify-passphrase luksFormat /dev/disk/by-id/"${device}-part${partition_number}"
-cryptsetup -q -v --type luks2 --cipher aes-xts-plain64 --hash sha512 --key-size 512 --use-random --iter-time 5000 --verify-passphrase luksFormat /dev/disk/by-id/"${device}-part${partition_number}"
+# cryptsetup -v --cipher aes-xts-plain64:sha512 --hash sha512 --key-size 512 --use-random --iter-time 5000 --verify-passphrase luksFormat /dev/disk/by-id/"${disk_name}-part${partition_number}"
+cryptsetup -q -v --type luks2 --cipher aes-xts-plain64 --hash sha512 --key-size 512 --use-random --iter-time 5000 --verify-passphrase luksFormat /dev/disk/by-id/"${disk_name}-part${partition_number}"

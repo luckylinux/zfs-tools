@@ -17,16 +17,25 @@ tmux new-session -d -s "testDevices" -n "General"
 counter=1
 
 # Loop over all Devices
-for device in "${disks[@]}"
+for disk_config in "${disks[@]}"
 do
+     # Get Disk Path
+     disk_name=$(get_disk_reference "${disk_config}")
+
+     # Get Disk Partition Number
+     partition_number=$(get_disk_partition_number "${disk_config}")
+
+     # Get Device Mapper Name
+     dm_name=$(get_device_mapper_name "${disk_config}")
+
      # Create new TMUX Window
-     tmux new-window -t testDevices:${counter} -n ${device}
+     tmux new-window -t testDevices:${counter} -n ${disk_name}
 
      # Select Window
      tmux select-window -t testDevices:${counter}
 
      # Execute Command
-     tmux send-keys -t testDevices:${counter} "${toolpath}/test-disks/test_single_device.sh \"${device}\"" ENTER
+     tmux send-keys -t testDevices:${counter} "${toolpath}/test-disks/test_single_device.sh \"${disk_name}\"" ENTER
 
      # Increase counter
      counter=$(($counter+1))

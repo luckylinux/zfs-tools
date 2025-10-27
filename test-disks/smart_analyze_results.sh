@@ -14,11 +14,20 @@ mkdir -p "${toolpath}/results/smart"
 timestamp=$(date +"%Y%m%d_%Hh%Mm%Ss")
 
 # For each device
-for device in "${disks[@]}"
+for disk_config in "${disks[@]}"
 do
-        # Show all test results
-        smartctl --attributes --log=selftest /dev/disk/by-id/${device} > ${toolpath}/results/smart/${device}_${timestamp}_all.log
+    # Get Disk Path
+    disk_name=$(get_disk_reference "${disk_config}")
 
-        # Show found errors
-        smartctl --attributes --log=selftest --quietmode=errorsonly /dev/disk/by-id/${device} > ${toolpath}/results/smart/${device}_${timestamp}_errors.log
+    # Get Disk Partition Number
+    partition_number=$(get_disk_partition_number "${disk_config}")
+
+    # Get Device Mapper Name
+    dm_name=$(get_device_mapper_name "${disk_config}")
+
+    # Show all test results
+    smartctl --attributes --log=selftest /dev/disk/by-id/${disk_name} > ${toolpath}/results/smart/${disk_name}_${timestamp}_all.log
+
+    # Show found errors
+    smartctl --attributes --log=selftest --quietmode=errorsonly /dev/disk/by-id/${disk_name} > ${toolpath}/results/smart/${disk_name}_${timestamp}_errors.log
 done

@@ -11,7 +11,17 @@ source ${toolpath}/load.sh
 mkdir -p "${toolpath}/results/smart"
 
 # For each device
-for device in "${disks[@]}"
+for disk_config in "${disks[@]}"
 do
-    smartctl -a /dev/disk/by-id/${device} | grep -A 2 "SMART Self-test" | tail -n +0
+    # Get Disk Path
+    disk_name=$(get_disk_reference "${disk_config}")
+
+    # Get Disk Partition Number
+    partition_number=$(get_disk_partition_number "${disk_config}")
+
+    # Get Device Mapper Name
+    dm_name=$(get_device_mapper_name "${disk_config}")
+
+    # Get SMART Status
+    smartctl -a /dev/disk/by-id/${disk_name} | grep -A 2 "SMART Self-test" | tail -n +0
 done

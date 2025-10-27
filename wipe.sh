@@ -8,9 +8,9 @@ if [[ ! -v toolpath ]]; then scriptpath=$(cd "$( dirname "${BASH_SOURCE[0]}" )" 
 source "${toolpath}/load.sh"
 
 #DISABLED: Do it manually
-#echo "Testing /dev/${device} using badblocks ..."
-#badblocks -c 10240 -wsv /dev/$device &
+#echo "Testing /dev/disk/by-id/${disk_name} using badblocks ..."
+#badblocks -c 10240 -wsv /dev/disk/by-id/${disk_name} &
 
 #DISABLED: Do it manually
-#echo "Shredding /dev/${device} using shred ..."
-#shred -v -n 1 /dev/$device 
+#echo "Shredding /dev/disk/by-id/${disk_name} using shred ..."
+#shred -v -n 1 /dev/disk/by-id/${disk_name}
