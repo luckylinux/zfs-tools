@@ -130,7 +130,7 @@ get_disk_reference() {
     ldisk_name=$(echo "${ldisk_config}" | cut -d "|" -f 1)
 
     # Return Value
-    return "${ldisk_name}"
+    echo "${ldisk_name}"
 }
 
 # Get Disk Partition Number from Disk Configuration in config.sh
@@ -153,7 +153,7 @@ get_disk_partition_number() {
     fi
 
     # Return Value
-    return "${lpartition_number}"
+    echo "${lpartition_number}"
 }
 
 # Get Device Mapper Name from Disk Configuration in config.sh
@@ -176,5 +176,5 @@ get_device_mapper_name() {
     ldm_name="${ldm_name}_crypt"
 
     # Return Value
-    return "${lm_name}"
+    echo "${lm_name}"
 }
