@@ -12,7 +12,7 @@ modprobe spl
 modprobe zfs
 
 # Create ZPOOL and add First 6-Disk RAIDZ2 VDEV
-zpool create -f -o ashift=${ashift} -O compression=lz4 -m none ${poolname} raidz2 "/dev/mapper/${luksdevices[0]}" "/dev/mapper/${luksdevices[1]}" "/dev/mapper/${luksdevices[2]}" "/dev/mapper/${luksdevices[3]}" "/dev/mapper/${luksdevices[4]}" "/dev/mapper/${luksdevices[5]}"
+zpool create -f -o ashift=${ashift} -O compression=lz4 -o compatibility=openzfs-2.0-linux -m none ${poolname} raidz2 "/dev/mapper/${luksdevices[0]}" "/dev/mapper/${luksdevices[1]}" "/dev/mapper/${luksdevices[2]}" "/dev/mapper/${luksdevices[3]}" "/dev/mapper/${luksdevices[4]}" "/dev/mapper/${luksdevices[5]}"
 
 # Wait a bit
 sleep 5
