@@ -21,14 +21,12 @@ then
 fi
 
 # Debug
-echo "Pool: $pool"
-echo "Disks:"
+echo "Pool set to: $pool"
+echo "Disks to be setup for use with Clevis:"
 for d in ${disks[@]}
 do
     echo -e "\t- ${d}"
 done
-
-exit 1
 
 # Get Distribution OS Release
 distribution=$(get_os_release)
