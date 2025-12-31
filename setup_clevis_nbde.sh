@@ -4,11 +4,31 @@
 relativepath="./" # Define relative path to go from this script to the root level of the tool
 if [[ ! -v toolpath ]]; then scriptpath=$(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd ); toolpath=$(realpath --canonicalize-missing "${scriptpath}/${relativepath}"); fi
 
+# Load Configuration and Functions
+source "${toolpath}/load.sh"
+
 # Pool Name
 pool=${1:-"zdata"}
 
-# Load Configuration and Functions
-source "${toolpath}/load.sh"
+# Only Process the specific Disks, if the User chooses to
+if [ "$#" -gt 1 ]
+then
+    # Unset existing Variable
+    disks=()
+
+    # Disks
+    disks=${@:2}
+fi
+
+# Debug
+echo "Pool: $pool"
+echo "Disks:"
+for d in ${disks[@]}
+do
+    echo -e "\t- ${d}"
+done
+
+exit 1
 
 # Get Distribution OS Release
 distribution=$(get_os_release)
