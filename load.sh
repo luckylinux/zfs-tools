@@ -16,7 +16,7 @@ then
         configfile="/etc/zfs-management/pool.conf.d/${pool}.sh"
     else
         # Display Warning
-        echo "WARNING: file ${configfile} does NOT exist ! Defaulting to ${toolpath}/config.sh instead"
+        echo "WARNING: file /etc/zfs-management/pool.conf.d/${pool}.sh does NOT exist ! Defaulting to ${toolpath}/config.sh instead"
 
         # Use "Testing" Configuration File from "${toolpath}/config.sh"
         configfile="${toolpath}/config.sh"
