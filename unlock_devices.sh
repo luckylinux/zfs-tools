@@ -72,7 +72,14 @@ do
     inotifywait -e create --timeout 5 --include filename "/dev/mapper/${dm_name}"
 
     # Echo
-    echo -e "\tDevice /dev/disk/by-id/${disk_name}-part${partition_number} was correctly unlocked at /dev/mapper/${dm_name}. Continuing."
+    if [[ -L "/dev/mapper/${dm_name}" ]]
+    then
+        # Display Success Message
+        echo -e "\tDevice /dev/disk/by-id/${disk_name}-part${partition_number} was correctly unlocked at /dev/mapper/${dm_name}. Continuing."
+    else
+        # Display Warning Message
+        echo -e "\tWARNING: Device /dev/disk/by-id/${disk_name}-part${partition_number} could NOT be unlocked. Ignoring Device."
+    fi
 done
 
 # Unset variable in order to enhance security
