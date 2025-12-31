@@ -8,11 +8,24 @@ if [[ ! -v toolpath ]]; then scriptpath=$(cd "$( dirname "${BASH_SOURCE[0]}" )" 
 mapfile -t files < <( find "${toolpath}/config-pre/" -iname "*.sh" )
 
 # Define Configuration
-if [ -n "${pool}" ] && [ -d "/etc/zfs-management/" ] && [ -d "/etc/zfs-management/pool.conf.d" ] && [ -f "/etc/zfs-management/pool.conf.d/${pool}.sh" ]
+if [ -n "${pool}" ] && [ -d "/etc/zfs-management/" ] && [ -d "/etc/zfs-management/pool.conf.d" ]
 then
-    # Use "Production" Configuration File from "/etc/zfs-management/pool.conf.d/${pool}.sh"
-    configfile="/etc/zfs-management/pool.conf.d/${pool}.sh"
+    if [[ -f "/etc/zfs-management/pool.conf.d/${pool}.sh" ]]
+    then
+        # Use "Production" Configuration File from "/etc/zfs-management/pool.conf.d/${pool}.sh"
+        configfile="/etc/zfs-management/pool.conf.d/${pool}.sh"
+    else
+        # Display Warning
+        echo "WARNING: file ${configfile} does NOT exist ! Defaulting to ${toolpath}/config.sh instead"
+
+        # Use "Testing" Configuration File from "${toolpath}/config.sh"
+        configfile="${toolpath}/config.sh"
+    fi
 else
+    # Echo
+    echo "WARNING: no Pool Configuration exists at /etc/zfs-management/pool.conf.d Location."
+    echo "WARNING: attept to load Configuration from ${toolpath}/config.sh"
+
     # Use "Testing" Configuration File from "${toolpath}/config.sh"
     configfile="${toolpath}/config.sh"
 fi
