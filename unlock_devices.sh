@@ -68,8 +68,14 @@ do
     # Get Device Mapper Name
     dm_name=$(get_device_mapper_name "${disk_config}")
 
-    # Freeze execution until /dev/mapper/${dm_name} will have been created
-    inotifywait -e create --timeout 5 --include filename "/dev/mapper/${dm_name}"
+    # inotifywait only works for Changes
+    # if the Device is already unlocked, it will still wait until the Timeout is reached
+    # Skip useless Wait if the Device already exists to begin with
+    if [[ ! -L "/dev/mapper/${dm_name}" ]]
+    then
+        # Freeze execution until /dev/mapper/${dm_name} will have been created
+        inotifywait -e create --timeout 5 --include filename "/dev/mapper/${dm_name}"
+    fi
 
     # Echo
     if [[ -L "/dev/mapper/${dm_name}" ]]
