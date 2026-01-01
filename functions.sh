@@ -127,10 +127,17 @@ get_disk_reference() {
 
     # Get Disk Name
     local ldisk_name
-    ldisk_name=$(echo "${ldisk_config}" | cut -d "|" -f 1)
+    # ldisk_name=$(echo "${ldisk_config}" | cut -d "|" -f 1)
+    ldisk_name=$(echo "${ldisk_config}" | awk -F"|" '{print $1}')
 
     # Return Value
     echo "${ldisk_name}"
+}
+
+# Get Disk Reference from Disk Configuration in config.sh
+# (Alias)
+get_disk_name() {
+    get_disk_reference "$1"
 }
 
 # Get Disk Partition Number from Disk Configuration in config.sh
@@ -140,7 +147,8 @@ get_disk_partition_number() {
 
     # Get Partition number
     local lpartition_number
-    lpartition_number=$(echo "${ldisk_config}" | cut -d "|" -f 2)
+    #lpartition_number=$(echo "${ldisk_config}" | cut -d "|" -f 2)
+    lpartition_number=$(echo "${ldisk_config}" | awk -F"|" '{print $2}')
 
     # Check if Value is empty
     if [[ -z "${lpartition_number}" ]]
@@ -156,6 +164,29 @@ get_disk_partition_number() {
     echo "${lpartition_number}"
 }
 
+# Get Device Mapper Suffix from Disk Configuration in config.sh
+get_device_mapper_suffix() {
+    # Input Arguments
+    local ldisk_config="$1"
+
+    # Get Device Mapper Suffix
+    local ldm_suffix
+    #ldm_suffix=$(echo "${ldisk_config}" | cut -d "|" -f 3)
+    ldm_suffix=$(echo "${ldisk_config}" | awk -F"|" '{print $3}')
+
+    # Check if Value is empty
+    if [[ -z "${ldm_suffix}" ]]
+    then
+        # Default to Suffix "default"
+        ldm_suffix="default"
+    fi
+
+    # Return Value
+    echo "${ldm_suffix}"
+}
+
+
+
 # Get Device Mapper Name from Disk Configuration in config.sh
 get_device_mapper_name() {
     # Input Arguments
@@ -163,11 +194,11 @@ get_device_mapper_name() {
 
     # Get Disk Name
     local ldisk_name
-    ldisk_name=$(echo "${ldisk_config}" | cut -d "|" -f 1)
+    ldisk_name=$(get_disk_name "${ldisk_config}")
 
     # Get Device Mapper Name
     local ldm_name
-    ldm_name=$(echo "${ldisk_config}" | cut -d "|" -f 3)
+    ldm_name=$(get_device_mapper_suffix "${ldisk_config}")
 
     # Check if Value is empty
     # if [[ -z "${ldm_name}" ]]
@@ -180,7 +211,7 @@ get_device_mapper_name() {
     ldm_name="${ldm_name}_crypt"
 
     # Add Disk Name Prefix
-    ldm_name="${disk_name}_${ldm_name}"
+    ldm_name="${ldisk_name}_${ldm_name}"
 
     # Return Value
     echo "${ldm_name}"
