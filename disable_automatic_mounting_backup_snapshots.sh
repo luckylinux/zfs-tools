@@ -10,6 +10,9 @@ source "${toolpath}/load.sh"
 # Get list of datasets
 datasets=$(zfs list -H -o name | grep -i "zdata/BACKUP" | xargs -n1)
 
+# Can also just list all Datasets that have "/" set as Mountpoint
+# zfs get mountpoint -t "filesystem" -r zdata -H -o name,value | grep -E '/$'
+
 while IFS= read -r dataset; do
     # Mount it
     echo "Disable dataset ${dataset}"
