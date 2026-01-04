@@ -153,6 +153,9 @@ get_disk_partition_number() {
     # Check if Value is empty
     if [[ -z "${lpartition_number}" ]]
     then
+        # Print warning
+        echo "Partition Number was not defined in Configuration. Defaulting to Partition Number = 1."
+
         # Default to lukspartnumber
         # Need to solve Circular Dependency ...
         #
@@ -203,9 +206,9 @@ get_device_reference() {
     # If Partition Number is Zero, then we use the entire Disk
     if [ ${lpartition_number} -eq 0 ]
     then
-        ldevice_reference="/dev/disk/by-id/${disk_reference}"
+        ldevice_reference="/dev/disk/by-id/${ldisk_reference}"
     else
-        ldevice_reference="/dev/disk/by-id/${disk_reference}-part${lpartition_number}"
+        ldevice_reference="/dev/disk/by-id/${ldisk_reference}-part${lpartition_number}"
     fi
 
     # Return Value
