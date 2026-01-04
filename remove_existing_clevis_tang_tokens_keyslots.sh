@@ -22,8 +22,11 @@ do
     # Get Device Mapper Name
     dm_name=$(get_device_mapper_name "${disk_config}")
 
+    # Get Device Path
+    device_path=$(get_device_reference "${disk_name}" ${partition_number})
+
     # Existing CLEVIS Tang Slots
-    mapfile existing_clevis_tang_keyslots < <(clevis luks list -d /dev/disk/by-id/${disk_name}-part${partition_number} | grep -E "[0-9]+: tang" | sed -E "s|([0-9]+): tang.*|\1|g")
+    mapfile existing_clevis_tang_keyslots < <(clevis luks list -d "${device_path}" | grep -E "[0-9]+: tang" | sed -E "s|([0-9]+): tang.*|\1|g")
 
     # Initialize Counter
     counter=1
@@ -33,7 +36,7 @@ do
     do
         # Unbind device from the TANG server via CLEVIS
         echo "Remove Keyserver <${keyserver}> from $device LUKS Header"
-        echo $password | clevis luks unbind -d /dev/disk/by-id/${disk_name}-part${partition_number} -s ${existing_clevis_tang_keyslot}
+        echo $password | clevis luks unbind -d "${device_path}" -s ${existing_clevis_tang_keyslot}
 
         # Increment counter
         counter=$((counter+1))
@@ -59,6 +62,6 @@ do
     dm_name=$(get_device_mapper_name "${disk_config}")
 
     # Get Keyslots Information
-    cryptsetup luksDump /dev/disk/by-id/${disk_name}-part${partition_number}
-    clevis luks list -d /dev/disk/by-id/${disk_name}-part${partition_number}
+    cryptsetup luksDump "${device_path}"
+    clevis luks list -d "${device_path}"
 done

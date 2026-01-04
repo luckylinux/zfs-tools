@@ -185,6 +185,29 @@ get_device_mapper_suffix() {
     echo "${ldm_suffix}"
 }
 
+# Get Device Reference
+get_device_reference() {
+    # Input Arguments
+    local ldisk_config="$1"
+
+    # Get Disk Reference
+    local ldisk_reference
+    ldisk_reference=$(get_disk_reference "${ldisk_config}")
+
+    # Get Partition Number
+    local lpartition_number=$(get_disk_partition_number "${ldisk_config}")
+
+    # Declare Variable
+    local ldevice_reference
+
+    # If Partition Number is Zero, then we use the entire Disk
+    if [ ${lpartition_number} -eq 0 ]
+    then
+        ldevice_reference="/dev/disk/by-id/${disk_reference}"
+    else
+        ldevice_reference="/dev/disk/by-id/${disk_reference}-part${lpartition_number}"
+    fi
+}
 
 
 # Get Device Mapper Name from Disk Configuration in config.sh

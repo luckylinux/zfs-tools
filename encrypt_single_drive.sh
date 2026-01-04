@@ -10,8 +10,8 @@ source "${toolpath}/load.sh"
 # Disk Name to be encrypted
 disk_name=${1:-""}
 
-# Partition to be encrypted
-partition=${2:-""}
+# Partition Number to be encrypted
+partition_number=${2:-""}
 
 # Ask interactively if not specified
 if [[ -z "${disk_name}" ]]
@@ -40,8 +40,8 @@ then
           esac
     done
 
-    # Define Partition
-    partition=1
+    # Define Partition Number
+    # partition_number=1
 
     # Get Real Path
     disk_real_path=$(readlink --canonicalize-missing "/dev/disk/by-id/${disk_name}")
@@ -50,7 +50,7 @@ then
     disk_size_current=$(parted -s "${disk_real_path}" unit MiB print free 2> /dev/null | grep -E "^Disk /dev/" | head -n1 | sed -E "s|Disk ${disk_real_path}: ([0-9]+)MiB|\1|g")
 
     # Determine Partition End Location
-    partition_end=$(($disk_size_current-$partition_start-$partition_margin))
+    partition_end=$((${disk_size_current}-${partition_start}-${partition_margin}))
 
     # Create GPT label
     parted -s /dev/disk/by-id/${disk_name} mklabel GPT
@@ -62,6 +62,9 @@ then
     sleep 5
 fi
 
+# Get Device Path
+device_path=$(get_device_reference "${disk_name}" ${partition_number})
+
 # Encrypt disks
-# cryptsetup -v --cipher aes-xts-plain64:sha512 --hash sha512 --key-size 512 --use-random --iter-time 5000 --verify-passphrase luksFormat /dev/disk/by-id/"${disk_name}-part${partition_number}"
-cryptsetup -q -v --type luks2 --cipher aes-xts-plain64 --hash sha512 --key-size 512 --use-random --iter-time 5000 --verify-passphrase luksFormat /dev/disk/by-id/"${disk_name}-part${partition_number}"
+# cryptsetup -v --cipher aes-xts-plain64:sha512 --hash sha512 --key-size 512 --use-random --iter-time 5000 --verify-passphrase luksFormat "${device_path}"
+cryptsetup -q -v --type luks2 --cipher aes-xts-plain64 --hash sha512 --key-size 512 --use-random --iter-time 5000 --verify-passphrase luksFormat "${device_path}"

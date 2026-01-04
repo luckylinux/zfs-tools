@@ -70,24 +70,27 @@ read -s -p "Enter encryption password: " password
 #         # Get Device Mapper Name
 #         dm_name=$(get_device_mapper_name "${disk_config}")
 #
+#         # Get Device Path
+#         device_path=$(get_device_reference "${disk_name}" ${partition_number})
+#
 #	  # Echo
 #	  echo "Processing Device /dev/disk/by-id/${disk_name}"
 #
 #	  # Check which keys are currently used via CLEVIS
-#	  list_device_keys=$(clevis luks list -d /dev/disk/by-id/${disk_name}-part${partition_number})
+#	  list_device_keys=$(clevis luks list -d "${device_path}")
 #
 #         # Bind device to the TANG server via CLEVIS
 #	  if [[ "${list_device_keys}" == *"${keyserver}"* ]]
 #         then
-#        	echo "Keyserver <${keyserver}> is already installed onto /dev/disk/by-id/<${disk_name}-part${partition_number}> LUKS Header"
+#        	echo "Keyserver <${keyserver}> is already installed onto ${device_path} LUKS Header"
 #     	  else
-#         	echo "Install Keyserver <${keyserver}> onto /dev/disk/by-id/<${disk_name}-${partition_number}> LUKS Header"
-#        	echo "${password}" | clevis luks bind -d /dev/disk/by-id/${disk_name}-part${partition_number} tang "{\"url\": \"http://${keyserver}\" , \"adv\": \"/tmp/keyserver-${keyservercounter}.jws\" }"
+#         	echo "Install Keyserver <${keyserver}> onto ${device_path} LUKS Header"
+#        	echo "${password}" | clevis luks bind -d ${device_path} tang "{\"url\": \"http://${keyserver}\" , \"adv\": \"/tmp/keyserver-${keyservercounter}.jws\" }"
 #	  fi
 #
 #	  # Get information about LUKS and Clevis Keyslots
-#	  cryptsetup luksDump /dev/disk/by-id/${disk_name}-part${partition_number}
-#	  clevis luks list -d /dev/disk/by-id/${disk_name}-part${partition_number}
+#	  cryptsetup luksDump "${device_path}"
+#	  clevis luks list -d "${device_path}"
 #     done
 #
 #     # Increment counter
@@ -106,9 +109,9 @@ do
     # Get Device Mapper Name
     dm_name=$(get_device_mapper_name "${disk_config}")
 
-    echo "Install Keyservers onto /dev/disk/by-id/${disk_name}-part${partition_number} LUKS Header"
+    echo "Install Keyservers onto ${device_path} LUKS Header"
     echo ${tangkeyserverdict} | jq -r --color-output
-    echo $password | clevis luks bind -d /dev/disk/by-id/${disk_name}-part${partition_number} -s ${clevis_luks_keyslot} -f sss "${tangkeyserverdict}"
+    echo $password | clevis luks bind -d "${device_path}" -s ${clevis_luks_keyslot} -f sss "${tangkeyserverdict}"
 done
 
 # Clear password from memory

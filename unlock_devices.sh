@@ -35,22 +35,25 @@ do
     # Get Device Mapper Name
     dm_name=$(get_device_mapper_name "${disk_config}")
 
+    # Get Device Path
+    device_path=$(get_device_reference "${disk_name}" ${partition_number})
+
     # Check if Disk is already unlocked
     if [[ -e "/dev/mapper/${dm_name}" ]]
     then
         # Echo
-        echo "Device /dev/disk/by-id/${disk_name}-part${partition_number} is already unlocked at /dev/mapper/${dm_name}"
+        echo "Device ${device_path} is already unlocked at /dev/mapper/${dm_name}"
     else
         # Echo
-        echo "Unlocking Device /dev/disk/by-id/${disk_name}-part${partition_number}"
+        echo "Unlocking Device ${device_path}"
 
         # Determine how to unlock Device
         if [[ "${type}" == "password" ]]; then
             # Password Unlock
-            echo -n "${password}" | cryptsetup open "/dev/disk/by-id/${disk_name}-part${partition_number}" "${dm_name}"
+            echo -n "${password}" | cryptsetup open "${device_path}" "${dm_name}"
         else
             # Clevis Unlock
-            clevis luks unlock -d "/dev/disk/by-id/${disk_name}-part${partition_number}" -n "${dm_name}"
+            clevis luks unlock -d "${device_path}" -n "${dm_name}"
         fi
     fi
 done
@@ -68,6 +71,9 @@ do
     # Get Device Mapper Name
     dm_name=$(get_device_mapper_name "${disk_config}")
 
+    # Get Device Path
+    device_path=$(get_device_reference "${disk_name}" ${partition_number})
+
     # inotifywait only works for Changes
     # if the Device is already unlocked, it will still wait until the Timeout is reached
     # Skip useless Wait if the Device already exists to begin with
@@ -81,10 +87,10 @@ do
     if [[ -L "/dev/mapper/${dm_name}" ]]
     then
         # Display Success Message
-        echo -e "\tDevice /dev/disk/by-id/${disk_name}-part${partition_number} was correctly unlocked at /dev/mapper/${dm_name}. Continuing."
+        echo -e "\tDevice ${device_path} was correctly unlocked at /dev/mapper/${dm_name}. Continuing."
     else
         # Display Warning Message
-        echo -e "\tWARNING: Device /dev/disk/by-id/${disk_name}-part${partition_number} could NOT be unlocked. Ignoring Device."
+        echo -e "\tWARNING: Device ${device_path} could NOT be unlocked. Ignoring Device."
     fi
 done
 
