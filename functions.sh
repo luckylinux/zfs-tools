@@ -214,7 +214,7 @@ get_device_reference() {
 get_device_reference_name_number() {
     # Input Arguments
     local ldisk_reference="$1"
-    local lpartition_number="$1"
+    local lpartition_number="$2"
 
     # Declare Variable
     local ldevice_reference
