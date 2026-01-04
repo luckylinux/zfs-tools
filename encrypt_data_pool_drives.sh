@@ -26,7 +26,7 @@ if [ $password == $verify ]; then
                 dm_name=$(get_device_mapper_name "${disk_config}")
 
                 # Get Device Path
-                device_path=$(get_device_reference "${disk_name}" ${partition_number})
+                device_path=$(get_device_reference "${disk_config}")
 
                 # Get Real Path
                 disk_real_path=$(readlink --canonicalize-missing "/dev/disk/by-id/${disk_name}")

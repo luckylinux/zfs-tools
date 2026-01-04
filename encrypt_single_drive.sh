@@ -63,7 +63,7 @@ then
 fi
 
 # Get Device Path
-device_path=$(get_device_reference "${disk_name}" ${partition_number})
+device_path=$(get_device_reference_name_number "${disk_name}" ${partition_number})
 
 # Encrypt disks
 # cryptsetup -v --cipher aes-xts-plain64:sha512 --hash sha512 --key-size 512 --use-random --iter-time 5000 --verify-passphrase luksFormat "${device_path}"

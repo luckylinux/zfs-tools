@@ -23,7 +23,7 @@ do
     dm_name=$(get_device_mapper_name "${disk_config}")
 
     # Get Device Path
-    device_path=$(get_device_reference "${disk_name}" ${partition_number})
+    device_path=$(get_device_reference "${disk_config}")
 
     # Existing CLEVIS Tang Slots
     mapfile existing_clevis_tang_keyslots < <(clevis luks list -d "${device_path}" | grep -E "[0-9]+: tang" | sed -E "s|([0-9]+): tang.*|\1|g")

@@ -36,7 +36,7 @@ do
     dm_name=$(get_device_mapper_name "${disk_config}")
 
     # Get Device Path
-    device_path=$(get_device_reference "${disk_name}" ${partition_number})
+    device_path=$(get_device_reference "${disk_config}")
 
     # Check if Disk is already unlocked
     if [[ -e "/dev/mapper/${dm_name}" ]]
@@ -72,7 +72,7 @@ do
     dm_name=$(get_device_mapper_name "${disk_config}")
 
     # Get Device Path
-    device_path=$(get_device_reference "${disk_name}" ${partition_number})
+    device_path=$(get_device_reference "${disk_config}")
 
     # inotifywait only works for Changes
     # if the Device is already unlocked, it will still wait until the Timeout is reached
