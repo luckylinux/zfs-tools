@@ -207,6 +207,9 @@ get_device_reference() {
     else
         ldevice_reference="/dev/disk/by-id/${disk_reference}-part${lpartition_number}"
     fi
+
+    # Return Value
+    echo "${ldevice_reference}"
 }
 
 
