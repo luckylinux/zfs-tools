@@ -109,6 +109,9 @@ do
     # Get Device Mapper Name
     dm_name=$(get_device_mapper_name "${disk_config}")
 
+    # Get Device Path
+    device_path=$(get_device_reference "${disk_name}" ${partition_number})
+
     echo "Install Keyservers onto ${device_path} LUKS Header"
     echo ${tangkeyserverdict} | jq -r --color-output
     echo $password | clevis luks bind -d "${device_path}" -s ${clevis_luks_keyslot} -f sss "${tangkeyserverdict}"
