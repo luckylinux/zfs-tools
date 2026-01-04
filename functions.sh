@@ -154,7 +154,7 @@ get_disk_partition_number() {
     if [[ -z "${lpartition_number}" ]]
     then
         # Print warning
-        echo "Partition Number was not defined in Configuration. Defaulting to Partition Number = 1."
+        # log_warning "Partition Number was not defined in Configuration. Defaulting to Partition Number = 1."
 
         # Default to lukspartnumber
         # Need to solve Circular Dependency ...
