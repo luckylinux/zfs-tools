@@ -204,7 +204,7 @@ get_device_reference() {
     local ldevice_reference
 
     # Compute Value
-    ldevice_reference=$(get_device_reference_name_number "${ldisk_reference}" ${lpartition_number=})
+    ldevice_reference=$(get_device_reference_name_number "${ldisk_reference}" ${lpartition_number})
 
     # Return Value
     echo "${ldevice_reference}"
