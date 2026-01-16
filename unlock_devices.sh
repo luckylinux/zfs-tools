@@ -18,9 +18,10 @@ sleep 5
 
 # Unlock LUKS devices
 # Prompt user for LUKS password
-if [[ "${type}" == "password" ]]; then
-   echo -n "Enter the <$pool> Pool Password: "
-   read -s password
+if [[ "${type}" == "password" ]]
+then
+    echo -n "Enter the <$pool> Pool Password: "
+    read -s password
 fi
 
 # Unlock all volumes at once
@@ -37,6 +38,20 @@ do
 
     # Get Device Path
     device_path=$(get_device_reference "${disk_config}")
+
+    if [[ "${type}" == "clevis" ]]
+    then
+        echo "Waiting for a Tang Server to be available"
+        tang_status=1
+        while [ ${tang_status} -ne 0 ]
+        do
+            # Try to contact a Tang Server
+            tang_server_online ${device_path}
+
+            # Store exit Code
+            tang_status=$?
+        done
+    fi
 
     # Check if Disk is already unlocked
     if [[ -e "/dev/mapper/${dm_name}" ]]

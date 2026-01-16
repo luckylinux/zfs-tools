@@ -260,3 +260,102 @@ get_device_mapper_name() {
     # Return Value
     echo "${ldm_name}"
 }
+
+# Check if any Tang Server is answering
+tang_server_online() {
+    # Input Arguments
+    local ldevice="$1"
+
+    # Get the list of Tang Servers
+    # mapfile -t clevis_lines < <(clevis luks list -d ${ldevice} | sed -E "s|.*?\"http://([0-9]+)\.([0-9]+)\.([0-9]+)\.([0-9]+)\".*$|\1.\2.\3.\4|")
+
+    # Get the list of Tang Servers
+    mapfile -t clevis_lines < <(clevis luks list -d ${ldevice})
+
+    # Extract Data
+    tang_servers=()
+    for clevis_line in "${clevis_lines[@]}"
+    do
+        # Match Pattern
+        echo "${clevis_line}" | grep -Eq "[0-9]+: tang"
+        is_tang_server=$?
+
+        if [ ${is_tang_server} -eq 0 ]
+        then
+            # Try to get "tang" Type Entry - Begins with [0-9]+\. tang '{...}'
+            mapfile -t clevis_current_servers < <(echo "${clevis_line}" | sed -E "s|^[0-9]+:\s?tang\s?'(.+)'|\1|g" | jq -r ".url")
+        else
+            # Try to get "sss" Type Entry - Begings with [0-9]+\. sss '{....}'
+            mapfile -t clevis_current_servers < <(echo "${clevis_line}" | sed -E "s|^[0-9]+:\s?sss\s?'(.+)'|\1|g" | jq -r ".pins.tang.[].url")
+        fi
+
+        for s in "${clevis_current_servers[@]}"
+        do
+            # Debug
+            echo "[DEBUG] Found Tang Server ${s} via Clevis"
+
+            # Add to Array
+            tang_servers+=("${s}")
+        done
+    done
+
+    # Initialize Status Code
+    overall_status=1
+    tang_count_replied=0
+
+    for tang_server in "${tang_servers[@]}"
+    do
+        # Echo
+        # echo "[DEBUG] Processing Tang Server ${tang_server}"
+
+        # Try to ping Device
+        # ping -c4 "${tang_server}" > /dev/null
+
+        # Save exit Code
+        # tang_status=$?
+
+        # Ping
+        #if [ $? != 0 ]
+        #then
+        #    # Error - Tang Server was not reachable
+        #    echo "[ERROR]: couldn't ping Tang Server at ${tang_server}"
+        #else
+        #    # OK
+        #    echo "[INFO]: Tang Server ${target_status} is online"
+        #fi
+
+        # Define Server URL
+        echo "${tang_server}" | grep -Eq "^http://"
+
+        if [ $? -eq 0 ]
+        then
+            # Protocol "http://" is already within the tang_server, only need to add "/adv", NOT "http://"
+            tang_server_url="${tang_server}/adv"
+
+        else
+            # Protocol "http://" is NOT within the tang_server, add both "http://" and "/adv"
+            tang_server_url="http://${tang_server}/adv"
+        fi
+
+        # Use CURL to try the Advertisement
+        http_code=$(curl -w "%{http_code}" "${tang_server_url}" -s --connect-timeout 5.0 -o /dev/null)
+
+        if [[ "${http_code}" == "200" ]]
+        then
+            # OK
+            echo "[INFO]: Tang Server ${tang_server} is online and answering at ${tang_server_url}"
+
+            # Set status
+            overall_status=0
+
+            # Increment Counter of Servers that replied
+            tang_count_replied=$((tang_count_replied+1))
+        else
+            # Error - Tang Server wasn't reachable or didn't answer in a valid Manner
+            echo "[ERROR]: Tang Server didn't provide a Valid Response at ${tang_server_url} - HTTP Status Code was ${http_code}"
+        fi
+    done
+
+    # Return Exit Code
+    return ${overall_status}
+}
