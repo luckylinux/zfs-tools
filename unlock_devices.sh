@@ -39,18 +39,23 @@ do
     # Get Device Path
     device_path=$(get_device_reference "${disk_config}")
 
-    if [[ "${type}" == "clevis" ]]
+    # Check if Device physically exists
+    # Makes no sense to keep trying getting the list of Tang Servers from a Device which doesn't exist
+    if [[ -e "${device_path}" ]]
     then
-        echo "Waiting for a Tang Server to be available"
-        tang_status=1
-        while [ ${tang_status} -ne 0 ]
-        do
-            # Try to contact a Tang Server
-            tang_server_online ${device_path}
+        if [[ "${type}" == "clevis" ]]
+        then
+            echo "Waiting for a Tang Server to be available"
+            tang_status=1
+            while [ ${tang_status} -ne 0 ]
+            do
+                # Try to contact a Tang Server
+                tang_server_online ${device_path}
 
-            # Store exit Code
-            tang_status=$?
-        done
+                # Store exit Code
+                tang_status=$?
+            done
+        fi
     fi
 
     # Check if Disk is already unlocked
